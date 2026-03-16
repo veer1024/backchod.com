@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Universal Registration Portal</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#2b5876,#4e4376);
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0;
+}
+
+.container{
+    background:white;
+    padding:40px;
+    border-radius:10px;
+    width:350px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:15px;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+
+button{
+    margin-top:25px;
+    width:100%;
+    padding:12px;
+    border:none;
+    background:#4e4376;
+    color:white;
+    font-size:16px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#2b5876;
+}
+
+.result{
+    margin-top:15px;
+    text-align:center;
+    color:green;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Register Yourself</h1>
+
+<form id="registerForm">
+
+<label>Name</label>
+<input type="text" id="name" required>
+
+<label>Date of Birth</label>
+<input type="date" id="dob" required>
+
+<label>Gender</label>
+<select id="gender" required>
+
+<option value="">Select your gender</option>
+
+<option>Male</option>
+<option>Female</option>
+<option>Non-binary</option>
+<option>Agender</option>
+<option>Genderfluid</option>
+<option>Bigender</option>
+<option>Two-Spirit</option>
+<option>Transgender</option>
+<option>Intersex</option>
+<option>Prefer not to say</option>
+
+<!-- nonsense options -->
+<option>Attack Helicopter</option>
+<option>Quantum Particle</option>
+<option>AI Generated</option>
+<option>Sentient Potato</option>
+<option>Time Traveler</option>
+<option>Alien Lifeform</option>
+<option>Multiverse Variant</option>
+<option>Shadow Entity</option>
+<option>NPC</option>
+<option>Glitch in the Matrix</option>
+<option>Ancient Wizard</option>
+<option>Cosmic Dust</option>
+<option>Unclassified</option>
+
+</select>
+
+<button type="submit">Register</button>
+
+</form>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+// default DOB → year 0001
+document.getElementById("dob").value = "0001-01-01";
+
+document.getElementById("registerForm").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let name = document.getElementById("name").value;
+let dob = document.getElementById("dob").value;
+let gender = document.getElementById("gender").value;
+
+document.getElementById("result").innerHTML =
+"Welcome <b>"+name+"</b> ("+gender+") born on "+dob;
+
+});
+
+</script>
+
+</body>
+</html>
