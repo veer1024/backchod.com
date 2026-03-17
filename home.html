@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backchod Home</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --paper: #fffdf8;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --yellow: #ffd84d;
+      --pink: #ff8fb1;
+      --blue: #7dd3fc;
+      --green: #86efac;
+      --orange: #fdba74;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Patrick Hand", cursive;
+      min-height: 100vh;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(253,186,116,0.35), transparent 16%),
+        radial-gradient(circle at 88% 10%, rgba(125,211,252,0.35), transparent 17%),
+        radial-gradient(circle at 15% 88%, rgba(134,239,172,0.28), transparent 16%),
+        radial-gradient(circle at 85% 82%, rgba(255,143,177,0.28), transparent 18%),
+        linear-gradient(180deg, #fffefb, #fffaf0 48%, #fffdf8);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .paint-splash {
+      position: fixed;
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(2px);
+      opacity: 0.45;
+    }
+
+    .s1 {
+      width: 120px;
+      height: 120px;
+      top: 120px;
+      left: 28px;
+      background: rgba(125, 211, 252, 0.28);
+    }
+
+    .s2 {
+      width: 90px;
+      height: 90px;
+      top: 280px;
+      right: 44px;
+      background: rgba(255, 216, 77, 0.24);
+    }
+
+    .s3 {
+      width: 140px;
+      height: 140px;
+      bottom: 160px;
+      right: 120px;
+      background: rgba(134, 239, 172, 0.22);
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.94);
+      border: 3px solid var(--ink);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      font-family: "Caveat", cursive;
+      font-size: 34px;
+      font-weight: 700;
+      color: #d97706;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      text-decoration: none;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid var(--ink);
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 20px;
+      box-shadow: 4px 4px 0 rgba(31,41,55,0.10);
+      cursor: pointer;
+      font-family: "Patrick Hand", cursive;
+      transition: 0.18s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px) rotate(-1deg);
+    }
+
+    .nav-btn.active {
+      background: #fff1a8;
+      color: #92400e;
+    }
+
+    .hero {
+      background: rgba(255,255,255,0.96);
+      border: 3px solid var(--ink);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px 0;
+      font-size: clamp(40px, 6vw, 64px);
+      font-family: "Caveat", cursive;
+      color: #92400e;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 22px;
+      color: var(--muted);
+    }
+
+    .screen {
+      display: none;
+      background: rgba(255,255,255,0.96);
+      border: 3px solid var(--ink);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      min-height: 70vh;
+      animation: screenPop 0.25s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes screenPop {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .screen h2 {
+      margin: 0 0 16px 0;
+      font-size: 42px;
+      font-family: "Caveat", cursive;
+      color: #d97706;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 3px solid rgba(31,41,55,0.12);
+      border-radius: 24px;
+      box-shadow: 6px 6px 0 rgba(31,41,55,0.08);
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 14px 0;
+      font-size: 32px;
+      font-family: "Caveat", cursive;
+      color: #d97706;
+    }
+
+    .profile-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .profile-item {
+      padding: 14px 16px;
+      border: 2px dashed rgba(31,41,55,0.14);
+      border-radius: 18px;
+      background: #fff;
+      font-size: 21px;
+    }
+
+    .profile-item strong {
+      color: #92400e;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .mini-box {
+      background: #fff;
+      border: 2px solid rgba(31,41,55,0.14);
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 130px;
+    }
+
+    .mini-box h4 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      font-family: "Caveat", cursive;
+      color: #1d4ed8;
+    }
+
+    .leaderboard {
+      display: grid;
+      gap: 12px;
+    }
+
+    .leader-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 160px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #fff;
+      border: 2px dashed rgba(31,41,55,0.14);
+      font-size: 20px;
+    }
+
+    .rank {
+      font-family: "Caveat", cursive;
+      font-size: 28px;
+      color: #92400e;
+    }
+
+    .market-grid,
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .fun-card {
+      background: #fff;
+      border: 2px solid rgba(31,41,55,0.14);
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 160px;
+    }
+
+    .fun-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      font-family: "Caveat", cursive;
+      color: #1d4ed8;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff1a8;
+      border: 2px solid rgba(31,41,55,0.12);
+      font-size: 16px;
+    }
+
+    .about-box {
+      background: #fff;
+      border: 2px dashed rgba(31,41,55,0.14);
+      border-radius: 20px;
+      padding: 18px;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 18px;
+      font-style: italic;
+      margin: 18px 0 8px;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .market-grid,
+      .games-grid,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .leader-row {
+        grid-template-columns: 70px 1fr;
+      }
+
+      .leader-row div:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        width: 100%;
+      }
+
+      .nav-btn {
+        flex: 1 1 auto;
+      }
+
+      .screen {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="paint-splash s1"></div>
+  <div class="paint-splash s2"></div>
+  <div class="paint-splash s3"></div>
+
+  <div class="page">
+    <nav class="navbar">
+      <div class="brand">Backchod.com</div>
+      <div class="nav-links">
+        <button class="nav-btn active" data-screen="profileScreen">Profile</button>
+        <button class="nav-btn" data-screen="aboutScreen">About</button>
+        <button class="nav-btn" data-screen="leaderboardScreen">WORLD BACKCHOD LEADERBOARD</button>
+        <button class="nav-btn" data-screen="marketplaceScreen">Meme Marketplace</button>
+        <button class="nav-btn" data-screen="gamesScreen">Games</button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>Welcome Home, Certified Nonsense Citizen</h1>
+      <p>Your registration has been accepted by the Ministry of Bakchodi. Use this power irresponsibly.</p>
+    </section>
+
+    <section class="screen active" id="profileScreen">
+      <h2>Profile Page</h2>
+      <div class="grid">
+        <section class="card">
+          <h3>Your Official Bakchod Profile</h3>
+          <div class="profile-list">
+            <div class="profile-item"><strong>Name:</strong> <span id="profileName">Unknown Creature</span></div>
+            <div class="profile-item"><strong>Date of Birth:</strong> <span id="profileDob">??/??/????</span></div>
+            <div class="profile-item"><strong>Gender:</strong> <span id="profileGender">Undefined</span></div>
+            <div class="profile-item"><strong>Registration Time Wasted:</strong> <span id="profileRegTime">00:00:00</span></div>
+            <div class="profile-item"><strong>Verification Time Wasted:</strong> <span id="profileVerifyTime">00:00:00</span></div>
+            <div class="profile-item"><strong>Funny Score:</strong> <span id="profileFunnyScore">0</span></div>
+            <div class="profile-item"><strong>Funny Rank:</strong> <span id="profileFunnyRank">Suspiciously Normal Human</span></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Quick Backchod Stats</h3>
+          <div class="mini-grid">
+            <div class="mini-box">
+              <h4>Aura Status</h4>
+              <p>Verified but still suspicious.</p>
+              <span class="tag">Multiverse Approved</span>
+            </div>
+            <div class="mini-box">
+              <h4>Official Status</h4>
+              <p>Eligible for memes, leaderboard drama, and unnecessary opinions.</p>
+              <span class="tag">Council Cleared</span>
+            </div>
+            <div class="mini-box">
+              <h4>Daily Mission</h4>
+              <p>Waste time elegantly and with purpose.</p>
+              <span class="tag">Chaotic Neutral</span>
+            </div>
+            <div class="mini-box">
+              <h4>Danger Level</h4>
+              <p>Capable of answering serious questions unseriously.</p>
+              <span class="tag">Medium to Legendary</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen" id="aboutScreen">
+      <h2>About</h2>
+      <div class="about-box">
+        Backchod.com is a completely unnecessary digital institution dedicated to pointless registration,
+        absurd verification, fake seriousness, advanced time wasting, and global nonsense diplomacy.
+        <br><br>
+        We stand for:
+        <br>• emotional confusion
+        <br>• unnecessary forms
+        <br>• premium bakchodi
+        <br>• international meme cooperation
+      </div>
+    </section>
+
+    <section class="screen" id="leaderboardScreen">
+      <h2>WORLD BACKCHOD LEADERBOARD</h2>
+      <div class="leaderboard">
+        <div class="leader-row">
+          <div class="rank">#1</div>
+          <div>Commander of Unnecessary Opinions</div>
+          <div>Score: 9999</div>
+        </div>
+        <div class="leader-row">
+          <div class="rank">#2</div>
+          <div>Global Meme Ambassador</div>
+          <div>Score: 8420</div>
+        </div>
+        <div class="leader-row">
+          <div class="rank">#3</div>
+          <div id="currentUserBoardName">You (probably)</div>
+          <div id="currentUserBoardScore">Score: 0</div>
+        </div>
+        <div class="leader-row">
+          <div class="rank">#4</div>
+          <div>Minister of Suspicious Vibes</div>
+          <div>Score: 6880</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="marketplaceScreen">
+      <h2>Meme Marketplace</h2>
+      <div class="market-grid">
+        <div class="fun-card">
+          <h3>Premium Reaction Pack</h3>
+          <p>Includes elite disappointment faces and advanced side-eye assets.</p>
+          <span class="tag">Coming Soon</span>
+        </div>
+        <div class="fun-card">
+          <h3>Rare Bakchod NFT</h3>
+          <p>Valueless, useless, but spiritually expensive.</p>
+          <span class="tag">Not Financial Advice</span>
+        </div>
+        <div class="fun-card">
+          <h3>Political Meme Subscription</h3>
+          <p>Receive weekly chaos in JPEG format.</p>
+          <span class="tag">Very Serious Product</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="gamesScreen">
+      <h2>Games</h2>
+      <div class="games-grid">
+        <div class="fun-card">
+          <h3>Guess the Aura</h3>
+          <p>Identify suspicious people using zero evidence and full confidence.</p>
+          <span class="tag">Soon</span>
+        </div>
+        <div class="fun-card">
+          <h3>Captcha Revenge</h3>
+          <p>Face 900 fake captchas and survive emotionally.</p>
+          <span class="tag">In Development</span>
+        </div>
+        <div class="fun-card">
+          <h3>Leaderboard War</h3>
+          <p>Compete globally in advanced nonsense metrics.</p>
+          <span class="tag">Beta</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      This homepage is still under active bakchodi.
+    </div>
+  </div>
+
+  <script>
+    const name = localStorage.getItem("bc_name") || "Unknown Creature";
+    const dob = localStorage.getItem("bc_dob") || "??/??/????";
+    const gender = localStorage.getItem("bc_gender") || "Undefined";
+    const regTime = localStorage.getItem("bc_time_wasted") || "00:00:00";
+    const verifyTime = localStorage.getItem("bc_verify_time_wasted") || "00:00:00";
+    const funnyScore = localStorage.getItem("bc_funny_score") || "0";
+    const funnyRank = localStorage.getItem("bc_funny_rank") || "Suspiciously Normal Human";
+
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileDob").textContent = dob;
+    document.getElementById("profileGender").textContent = gender;
+    document.getElementById("profileRegTime").textContent = regTime;
+    document.getElementById("profileVerifyTime").textContent = verifyTime;
+    document.getElementById("profileFunnyScore").textContent = funnyScore;
+    document.getElementById("profileFunnyRank").textContent = funnyRank;
+
+    document.getElementById("currentUserBoardName").textContent = `${name} (probably)`;
+    document.getElementById("currentUserBoardScore").textContent = `Score: ${funnyScore}`;
+
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const screens = document.querySelectorAll(".screen");
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.screen;
+
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        screens.forEach((screen) => {
+          screen.classList.remove("active");
+        });
+
+        document.getElementById(target).classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>

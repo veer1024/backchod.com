@@ -1321,7 +1321,17 @@
         <strong>Final Rank:</strong> ${rank}<br>
         <strong>Official Conclusion:</strong> You are probably the same being who filled the previous form, unless there has been advanced multiverse fraud.<br>
         <div class="official-stamp">APPROVED BY MINISTRY OF BAKCHODI</div>
+
+        <div style="margin-top:20px; text-align:center;">
+          <button id="visitHomeBtn" class="submit-btn" style="min-width:220px;">
+            VISIT HOME
+          </button>
+        </div>
       `;
+
+      document.getElementById("visitHomeBtn").addEventListener("click", () => {
+        window.location.href = "home.html";
+      });
 
       localStorage.setItem("bc_verified", "yes");
       localStorage.setItem("bc_verify_time_wasted", formatTime(verifySeconds));
