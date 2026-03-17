@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
 
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5440180307227003"
+     crossorigin="anonymous"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -1148,15 +1151,11 @@
       const allGenderSubInputs = document.querySelectorAll('input[name="gender_sub"]');
       const selectedIndex = Array.from(allGenderSubInputs).findIndex(input => input.checked);
 
-      if (selectedIndex === 0 || selectedIndex === 1) {
-        genderSubPreviewBox.style.display = "block";
-        genderSubPreviewImage.src = "images/varys.jpg";
-        genderSubPreviewImage.alt = "Varys reference";
-      } else {
-        genderSubPreviewBox.style.display = "none";
-        genderSubPreviewImage.src = "";
-        genderSubPreviewImage.alt = "";
-      }
+      genderSubPreviewBox.style.display = "block";
+      genderSubPreviewImage.src = "images/varys.jpg";
+      genderSubPreviewImage.alt = "Varys reference";
+
+      
     }
 
     genderSubInputs.forEach((input) => {
