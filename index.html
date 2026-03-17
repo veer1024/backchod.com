@@ -1,145 +1,600 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Universal Registration Portal</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backchod Registration</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#2b5876,#4e4376);
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0;
-}
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #1e1b4b, #111827, #3f3f46);
+      color: #fff;
+      min-height: 100vh;
+      padding: 24px;
+    }
 
-.container{
-    background:white;
-    padding:40px;
-    border-radius:10px;
-    width:350px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-h1{
-    text-align:center;
-    margin-bottom:25px;
-}
+    .wasted-time {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
 
-label{
-    font-weight:bold;
-    display:block;
-    margin-top:15px;
-}
+    .wasted-time h1 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-input,select{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
-    border-radius:5px;
-    border:1px solid #ccc;
-}
+    .timer {
+      font-size: 34px;
+      font-weight: 800;
+      color: #facc15;
+      letter-spacing: 2px;
+    }
 
-button{
-    margin-top:25px;
-    width:100%;
-    padding:12px;
-    border:none;
-    background:#4e4376;
-    color:white;
-    font-size:16px;
-    border-radius:6px;
-    cursor:pointer;
-}
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+    }
 
-button:hover{
-    background:#2b5876;
-}
+    .title {
+      text-align: center;
+      margin: 0 0 8px 0;
+      font-size: 32px;
+    }
 
-.result{
-    margin-top:15px;
-    text-align:center;
-    color:green;
-}
-</style>
+    .subtitle {
+      text-align: center;
+      margin: 0 0 28px 0;
+      color: #d1d5db;
+      font-size: 15px;
+    }
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    input,
+    select,
+    button {
+      font: inherit;
+    }
+
+    input[type="text"],
+    .date-display,
+    select {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+    }
+
+    .date-controls {
+      display: grid;
+      grid-template-columns: 120px 1fr 120px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-small {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-small:hover {
+      background: #1d4ed8;
+    }
+
+    .flag-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    .tool-group span {
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    input[type="color"] {
+      width: 44px;
+      height: 38px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      cursor: pointer;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      background: #ffffff;
+      border: 3px dashed #93c5fd;
+      border-radius: 16px;
+      display: block;
+      touch-action: none;
+    }
+
+    .canvas-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-clear {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-clear:hover {
+      background: #dc2626;
+    }
+
+    .btn-fill {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-fill:hover {
+      background: #059669;
+    }
+
+    .help-text {
+      margin-top: 8px;
+      color: #d1d5db;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+
+    .success {
+      color: #86efac;
+    }
+
+    .submit-wrap {
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    .submit-btn {
+      background: #facc15;
+      color: #111827;
+      padding: 14px 26px;
+      font-size: 16px;
+      min-width: 220px;
+    }
+
+    .submit-btn:hover {
+      background: #eab308;
+    }
+
+    .result {
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      line-height: 1.6;
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      .date-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .timer {
+        font-size: 28px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="page">
+    <div class="wasted-time">
+      <h1>Time Wasted on Registration</h1>
+      <div class="timer" id="timer">00:00:00</div>
+    </div>
 
-<div class="container">
+    <div class="card">
+      <h2 class="title">Totally Serious Registration Form</h2>
+      <p class="subtitle">Please fill this useless form with maximum sincerity.</p>
 
-<h1>Register Yourself</h1>
+      <form id="registrationForm">
+        <div class="field">
+          <label for="name">1. Name</label>
+          <input type="text" id="name" placeholder="Enter your legendary name" required />
+        </div>
 
-<form id="registerForm">
+        <div class="field">
+          <label>2. Date of Birth</label>
+          <div class="date-controls">
+            <button type="button" class="btn btn-small" id="earlierBtn">Earlier</button>
+            <div class="date-display" id="dateDisplay">01/01/2000</div>
+            <button type="button" class="btn btn-small" id="laterBtn">Later</button>
+          </div>
+          <div class="help-text">
+            You are not allowed to type the date. You must time-travel using buttons.
+          </div>
+        </div>
 
-<label>Name</label>
-<input type="text" id="name" required>
+        <div class="field">
+          <label>3. Country Flag</label>
+          <div class="flag-tools">
+            <div class="tool-group">
+              <span>Color</span>
+              <input type="color" id="colorPicker" value="#ff0000" />
+            </div>
 
-<label>Date of Birth</label>
-<input type="date" id="dob" required>
+            <div class="tool-group">
+              <span>Brush</span>
+              <input type="range" id="brushSize" min="2" max="30" value="8" />
+            </div>
+          </div>
 
-<label>Gender</label>
-<select id="gender" required>
+          <canvas id="flagCanvas" width="760" height="380"></canvas>
 
-<option value="">Select your gender</option>
+          <div class="canvas-actions">
+            <button type="button" class="btn btn-fill" id="fillCanvasBtn">Fill With Selected Color</button>
+            <button type="button" class="btn btn-clear" id="clearCanvasBtn">Clear Flag</button>
+          </div>
 
-<option>Male</option>
-<option>Female</option>
-<option>Non-binary</option>
-<option>Agender</option>
-<option>Genderfluid</option>
-<option>Bigender</option>
-<option>Two-Spirit</option>
-<option>Transgender</option>
-<option>Intersex</option>
-<option>Prefer not to say</option>
+          <div class="help-text">
+            Draw your country flag manually like a true patriot.
+          </div>
+        </div>
 
-<!-- nonsense options -->
-<option>Attack Helicopter</option>
-<option>Quantum Particle</option>
-<option>AI Generated</option>
-<option>Sentient Potato</option>
-<option>Time Traveler</option>
-<option>Alien Lifeform</option>
-<option>Multiverse Variant</option>
-<option>Shadow Entity</option>
-<option>NPC</option>
-<option>Glitch in the Matrix</option>
-<option>Ancient Wizard</option>
-<option>Cosmic Dust</option>
-<option>Unclassified</option>
+        <div class="field">
+          <label for="gender">4. Gender</label>
+          <select id="gender" required>
+            <option value="">Select one majestic option</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Non-binary</option>
+            <option>Agender</option>
+            <option>Bigender</option>
+            <option>Genderfluid</option>
+            <option>Transgender</option>
+            <option>Intersex</option>
+            <option>Two-Spirit</option>
+            <option>Demiboy</option>
+            <option>Demigirl</option>
+            <option>Androgynous</option>
+            <option>Questioning</option>
+            <option>Prefer not to say</option>
+            <option>Prefer to say too much</option>
+            <option>Ancient Being</option>
+            <option>Attack Helicopter</option>
+            <option>Toaster</option>
+            <option>Quantum Fog</option>
+            <option>NPC</option>
+            <option>Main Character</option>
+            <option>Side Character</option>
+            <option>Villain Arc</option>
+            <option>Cosmic Dust</option>
+            <option>Glitch Entity</option>
+            <option>Moonlight Creature</option>
+            <option>WiFi Spirit</option>
+            <option>Keyboard Warrior</option>
+            <option>Professional Confusion</option>
+            <option>Certified Backchod</option>
+            <option>Chaotic Neutral</option>
+            <option>Spreadsheet Monster</option>
+            <option>Low Battery Human</option>
+            <option>Sleep-Deprived Legend</option>
+            <option>Parallel Universe Version</option>
+            <option>My Lawyer Advised Silence</option>
+            <option>Undefined</option>
+            <option>Otherworldly</option>
+            <option>God Mode</option>
+            <option>Demo User</option>
+          </select>
+        </div>
 
-</select>
+        <div class="field">
+          <label for="passwordField">5. Password</label>
+          <input
+            type="text"
+            id="passwordField"
+            placeholder='Type exactly: password'
+            autocomplete="off"
+            required
+          />
+          <div class="message" id="passwordMessage"></div>
+        </div>
 
-<button type="submit">Register</button>
+        <div class="submit-wrap">
+          <button type="submit" class="btn submit-btn">Complete Registration</button>
+        </div>
 
-</form>
+        <div class="result" id="resultBox"></div>
+      </form>
+    </div>
+  </div>
 
-<div class="result" id="result"></div>
+  <script>
+    // ---------------- TIMER ----------------
+    let secondsSpent = 0;
+    const timerEl = document.getElementById("timer");
 
-</div>
+    function formatTime(totalSeconds) {
+      const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+      const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+      const secs = String(totalSeconds % 60).padStart(2, "0");
+      return `${hrs}:${mins}:${secs}`;
+    }
 
-<script>
+    setInterval(() => {
+      secondsSpent++;
+      timerEl.textContent = formatTime(secondsSpent);
+    }, 1000);
 
-// default DOB → year 0001
-document.getElementById("dob").value = "0001-01-01";
+    // ---------------- DATE CONTROL ----------------
+    let currentDate = new Date(2000, 0, 1); // 01/01/2000
+    const dateDisplay = document.getElementById("dateDisplay");
+    const earlierBtn = document.getElementById("earlierBtn");
+    const laterBtn = document.getElementById("laterBtn");
 
-document.getElementById("registerForm").addEventListener("submit",function(e){
+    function renderDate() {
+      const dd = String(currentDate.getDate()).padStart(2, "0");
+      const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const yyyy = currentDate.getFullYear();
+      dateDisplay.textContent = `${dd}/${mm}/${yyyy}`;
+    }
 
-e.preventDefault();
+    earlierBtn.addEventListener("click", () => {
+      currentDate.setDate(currentDate.getDate() - 1);
+      renderDate();
+    });
 
-let name = document.getElementById("name").value;
-let dob = document.getElementById("dob").value;
-let gender = document.getElementById("gender").value;
+    laterBtn.addEventListener("click", () => {
+      currentDate.setDate(currentDate.getDate() + 1);
+      renderDate();
+    });
 
-document.getElementById("result").innerHTML =
-"Welcome <b>"+name+"</b> ("+gender+") born on "+dob;
+    renderDate();
 
+    // ---------------- FLAG DRAWING CANVAS ----------------
+    const canvas = document.getElementById("flagCanvas");
+    const ctx = canvas.getContext("2d");
+    const colorPicker = document.getElementById("colorPicker");
+    const brushSize = document.getElementById("brushSize");
+    const clearCanvasBtn = document.getElementById("clearCanvasBtn");
+    const fillCanvasBtn = document.getElementById("fillCanvasBtn");
+
+    let isDrawing = false;
+    let hasDrawnSomething = false;
+
+    function paintCanvasWhite() {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    paintCanvasWhite();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    function getCanvasPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+
+      if (e.touches && e.touches[0]) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function startDraw(e) {
+      isDrawing = true;
+      const pos = getCanvasPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      hasDrawnSomething = true;
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getCanvasPos(e);
+      ctx.strokeStyle = colorPicker.value;
+      ctx.lineWidth = brushSize.value;
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDraw() {
+      isDrawing = false;
+      ctx.beginPath();
+    }
+
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDraw);
+    canvas.addEventListener("mouseleave", stopDraw);
+
+    canvas.addEventListener("touchstart", startDraw, { passive: false });
+    canvas.addEventListener("touchmove", draw, { passive: false });
+    canvas.addEventListener("touchend", stopDraw);
+
+    clearCanvasBtn.addEventListener("click", () => {
+      paintCanvasWhite();
+      hasDrawnSomething = false;
+    });
+
+    fillCanvasBtn.addEventListener("click", () => {
+      ctx.fillStyle = colorPicker.value;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      hasDrawnSomething = true;
+    });
+
+    // ---------------- PASSWORD VALIDATION ----------------
+    const passwordField = document.getElementById("passwordField");
+    const passwordMessage = document.getElementById("passwordMessage");
+
+    function validatePassword() {
+      const value = passwordField.value;
+
+      if (value.length === 0) {
+        passwordMessage.textContent = "";
+        passwordMessage.className = "message";
+        return false;
+      }
+
+      if (value === "password") {
+        passwordMessage.textContent = "Correct spelling. Password accepted.";
+        passwordMessage.className = "message success";
+        return true;
+      } else {
+        passwordMessage.textContent = "Wrong spelling.";
+        passwordMessage.className = "message error";
+        return false;
+      }
+    }
+
+    passwordField.addEventListener("input", validatePassword);
+
+    // ---------------- FORM SUBMIT ----------------
+    const form = document.getElementById("registrationForm");
+    const resultBox = document.getElementById("resultBox");
+
+    form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const gender = document.getElementById("gender").value;
+  const passwordOk = validatePassword();
+
+  if (!name) {
+    alert("Please enter your name.");
+    return;
+  }
+
+  if (!gender) {
+    alert("Please select your gender.");
+    return;
+  }
+
+  if (!hasDrawnSomething) {
+    alert("Please draw your country flag.");
+    return;
+  }
+
+  if (!passwordOk) {
+    alert('Password is wrong. Type exactly "password".');
+    return;
+  }
+
+  localStorage.setItem("bc_name", name);
+  localStorage.setItem("bc_dob", dateDisplay.textContent);
+  localStorage.setItem("bc_gender", gender);
+  localStorage.setItem("bc_time_wasted", formatTime(secondsSpent));
+  localStorage.setItem("bc_flag_drawn", "yes");
+
+  resultBox.style.display = "block";
+  resultBox.innerHTML = `
+    <strong>Registration completed successfully.</strong><br>
+    Redirecting to identity verification chamber...
+  `;
+
+  setTimeout(() => {
+    window.location.href = "verify.html";
+  }, 1200);
 });
-
-</script>
-
+  </script>
 </body>
 </html>
