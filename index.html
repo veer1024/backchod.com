@@ -801,6 +801,30 @@
         font-size: 20px;
       }
     }
+
+    .advanced-hint-row {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.advanced-hint-btn {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: "Patrick Hand", cursive;
+  box-shadow: 4px 4px 0 rgba(31,41,55,0.10);
+  transition: 0.18s ease;
+}
+
+.advanced-hint-btn:hover {
+  transform: translateY(-2px) rotate(-1deg);
+}
   </style>
 </head>
 <body>
@@ -923,7 +947,7 @@
           <input
             type="text"
             id="passwordField"
-            placeholder='Type exactly: password'
+            placeholder='Type : password'
             autocomplete="off"
             required
           />
@@ -976,6 +1000,10 @@
             <button type="button" class="advanced-btn" id="advancedCaptchaBtn">Verify</button>
           </div>
 
+          <div class="advanced-hint-row">
+            <button type="button" class="advanced-hint-btn" id="advancedHintBtn">Need Hint?</button>
+          </div>
+
           <div class="advanced-msg" id="advancedCaptchaMsg"></div>
           <div class="advanced-hint">Correct answer is extremely necessary for survival.</div>
         </div>
@@ -1002,6 +1030,26 @@
     </div>
   </div>
 
+
+  <div class="modal-overlay" id="hintOverlay">
+    <div class="captcha-modal" style="max-width: 520px;">
+      <div class="captcha-head">
+        <h3>Backchod Hint Chamber</h3>
+        <button class="captcha-close" id="closeHintBtn" type="button">×</button>
+      </div>
+      <div class="captcha-body captcha-body-single">
+        <div class="captcha-panel" style="text-align:center;">
+          <h4 style="margin-bottom:12px;">Need help, fraud candidate? 🐉</h4>
+          <p style="font-size:22px; line-height:1.5; color:#7c2d12;">
+            Haven’t you watched GOT?<br><br>
+            Even random people from Braavos know this phrase.<br>
+            Go use Google and complete it properly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4QYVGGG0F1"></script>
   <script>
@@ -1022,6 +1070,10 @@
 
     const successOverlay = document.getElementById("successOverlay");
     const successMessage = document.getElementById("successMessage");
+
+    const hintOverlay = document.getElementById("hintOverlay");
+    const advancedHintBtn = document.getElementById("advancedHintBtn");
+    const closeHintBtn = document.getElementById("closeHintBtn");
 
     let wrongCaptchaIndex = 0;
 
@@ -1324,6 +1376,28 @@
       successOverlay.classList.remove("show");
       document.body.style.overflow = "";
     }
+
+    function openHintOverlay() {
+      hintOverlay.classList.add("show");
+    }
+
+    function closeHintOverlay() {
+      hintOverlay.classList.remove("show");
+    }
+
+    advancedHintBtn.addEventListener("click", () => {
+      openHintOverlay();
+    });
+
+    closeHintBtn.addEventListener("click", () => {
+      closeHintOverlay();
+    });
+
+    hintOverlay.addEventListener("click", (e) => {
+      if (e.target === hintOverlay) {
+        closeHintOverlay();
+      }
+    });
 
     function finalizeRegistrationAndRedirect() {
       if (!pendingRegistration) return;
