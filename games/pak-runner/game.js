@@ -70,109 +70,142 @@ export class PakRunnerGame {
   }
 
   preload(scene) {
-    console.log("[PakRunnerGame] preload assets");
-    scene.load.image("coin", "./assets/coin.png");
-    scene.load.image("hurdle", "./assets/hurdle.png");
-    scene.load.image("bg", "./assets/bg.png");
-  }
+  console.log("[PakRunnerGame] preload assets");
+
+  scene.load.image("bg", "./assets/bg.png");
+  scene.load.image("player", "./assets/player.png");
+  scene.load.image("coin", "./assets/coin.png");
+  scene.load.image("hurdle", "./assets/hurdle.png");
+
+  scene.load.on("filecomplete", (key) => {
+    console.log("[Phaser] loaded:", key);
+  });
+
+  scene.load.on("loaderror", (file) => {
+    console.error("[Phaser] failed to load:", file.key, file.src);
+  });
+}
 
   create(scene) {
-    console.log("[PakRunnerGame] create scene started");
-    this.sceneRef = scene;
+  console.log("[PakRunnerGame] create scene started");
+  this.sceneRef = scene;
 
+  // Background image
+  const bg = scene.add.image(500, 320, "bg");
+  if (bg.texture?.key !== "__MISSING") {
+    bg.setDisplaySize(1000, 640);
+  } else {
+    console.warn("[PakRunnerGame] bg missing, using fallback rectangles");
     scene.add.rectangle(500, 320, 1000, 640, 0xe0f2fe);
-    scene.add.rectangle(500, 560, 1000, 160, 0xbbf7d0);
+  }
 
-    const ground = scene.add.rectangle(500, 610, 1000, 60, 0x84cc16);
-    scene.physics.add.existing(ground, true);
+  // Soft mid-ground strip
+  scene.add.rectangle(500, 560, 1000, 160, 0xbbf7d0);
+
+  const ground = scene.add.rectangle(500, 610, 1000, 60, 0x84cc16);
+  scene.physics.add.existing(ground, true);
+
+  // Player image
+  this.player = scene.physics.add.sprite(140, 510, "player");
+
+  if (this.player.texture?.key === "__MISSING") {
+    console.warn("[PakRunnerGame] player image missing, using fallback rectangle");
+    this.player.destroy();
 
     this.player = scene.add.rectangle(140, 510, 50, 70, 0xf59e0b);
     scene.physics.add.existing(this.player);
-    this.player.body.setCollideWorldBounds(true);
-
-    scene.physics.add.collider(this.player, ground);
-
-    this.hurdles = scene.physics.add.group();
-    this.coinsGroup = scene.physics.add.group();
-
-    scene.physics.add.collider(this.hurdles, ground);
-    scene.physics.add.overlap(this.player, this.coinsGroup, (_, coin) => {
-      console.log("[PakRunnerGame] coin collected");
-      coin.destroy();
-      this.coins += 1;
-      this.updateHud();
-    });
-
-    scene.physics.add.overlap(this.player, this.hurdles, () => {
-      console.log("[PakRunnerGame] hurdle collision -> gameOver");
-      this.gameOver();
-    });
-
-    scene.time.addEvent({
-      delay: 1500,
-      callback: () => this.spawnHurdle(),
-      loop: true,
-    });
-
-    scene.time.addEvent({
-      delay: 1100,
-      callback: () => this.spawnCoin(),
-      loop: true,
-    });
-
-    this.updateHud();
-    this.started = true;
-
-    console.log("[PakRunnerGame] create scene finished, game started");
+  } else {
+    this.player.setDisplaySize(70, 70);
   }
+
+  this.player.body.setCollideWorldBounds(true);
+  scene.physics.add.collider(this.player, ground);
+
+  this.hurdles = scene.physics.add.group();
+  this.coinsGroup = scene.physics.add.group();
+
+  scene.physics.add.collider(this.hurdles, ground);
+
+  scene.physics.add.overlap(this.player, this.coinsGroup, (_, coin) => {
+    console.log("[PakRunnerGame] coin collected");
+    coin.destroy();
+    this.coins += 1;
+    this.updateHud();
+  });
+
+  scene.physics.add.overlap(this.player, this.hurdles, () => {
+    console.log("[PakRunnerGame] hurdle collision -> gameOver");
+    this.gameOver();
+  });
+
+  scene.time.addEvent({
+    delay: 1500,
+    callback: () => this.spawnHurdle(),
+    loop: true,
+  });
+
+  scene.time.addEvent({
+    delay: 1100,
+    callback: () => this.spawnCoin(),
+    loop: true,
+  });
+
+  this.updateHud();
+  this.started = true;
+
+  console.log("[PakRunnerGame] create scene finished, game started");
+}
 
   spawnHurdle() {
-    if (!this.sceneRef || !this.started) return;
+  if (!this.sceneRef || !this.started) return;
 
-    console.log("[PakRunnerGame] spawnHurdle");
+  console.log("[PakRunnerGame] spawnHurdle");
 
-    const hurdle = this.hurdles.create(1080, 520, "hurdle");
-    if (!hurdle.texture?.key || hurdle.texture.key === "__MISSING") {
-      console.warn("[PakRunnerGame] hurdle asset missing, using fallback rectangle");
-      hurdle.destroy();
-      const rect = this.sceneRef.add.rectangle(1080, 520, 42, 58, 0xef4444);
-      this.sceneRef.physics.add.existing(rect);
-      rect.body.setVelocityX(-this.worldSpeed);
-      rect.body.setImmovable(true);
-      rect.body.setAllowGravity(false);
-      this.hurdles.add(rect);
-      return;
-    }
+  const hurdle = this.hurdles.create(1080, 520, "hurdle");
 
-    hurdle.setScale(0.45);
-    hurdle.body.setVelocityX(-this.worldSpeed);
-    hurdle.body.setAllowGravity(true);
-    hurdle.body.setImmovable(true);
+  if (!hurdle.texture || hurdle.texture.key === "__MISSING") {
+    console.warn("[PakRunnerGame] hurdle asset missing, using fallback rectangle");
+    hurdle.destroy();
+
+    const rect = this.sceneRef.add.rectangle(1080, 520, 42, 58, 0xef4444);
+    this.sceneRef.physics.add.existing(rect);
+    rect.body.setVelocityX(-this.worldSpeed);
+    rect.body.setImmovable(true);
+    rect.body.setAllowGravity(false);
+    this.hurdles.add(rect);
+    return;
   }
+
+  hurdle.setDisplaySize(52, 60);
+  hurdle.body.setVelocityX(-this.worldSpeed);
+  hurdle.body.setAllowGravity(true);
+  hurdle.body.setImmovable(true);
+}
 
   spawnCoin() {
-    if (!this.sceneRef || !this.started) return;
+  if (!this.sceneRef || !this.started) return;
 
-    const y = Phaser.Math.Between(400, 500);
-    console.log("[PakRunnerGame] spawnCoin", { y });
+  const y = Phaser.Math.Between(400, 500);
+  console.log("[PakRunnerGame] spawnCoin", { y });
 
-    const coin = this.coinsGroup.create(1080, y, "coin");
+  const coin = this.coinsGroup.create(1080, y, "coin");
 
-    if (!coin.texture?.key || coin.texture.key === "__MISSING") {
-      console.warn("[PakRunnerGame] coin asset missing, using fallback circle");
-      coin.destroy();
-      const circ = this.sceneRef.add.circle(1080, y, 16, 0xfacc15);
-      this.sceneRef.physics.add.existing(circ);
-      circ.body.setVelocityX(-this.worldSpeed);
-      circ.body.setAllowGravity(false);
-      this.coinsGroup.add(circ);
-      return;
-    }
+  if (!coin.texture || coin.texture.key === "__MISSING") {
+    console.warn("[PakRunnerGame] coin asset missing, using fallback circle");
+    coin.destroy();
 
-    coin.setScale(0.25);
-    coin.body.setVelocityX(-this.worldSpeed);
-    coin.body.setAllowGravity(false);
+    const circ = this.sceneRef.add.circle(1080, y, 16, 0xfacc15);
+    this.sceneRef.physics.add.existing(circ);
+    circ.body.setVelocityX(-this.worldSpeed);
+    circ.body.setAllowGravity(false);
+    this.coinsGroup.add(circ);
+    return;
   }
+
+  coin.setDisplaySize(28, 28);
+  coin.body.setVelocityX(-this.worldSpeed);
+  coin.body.setAllowGravity(false);
+}
 
   update(scene, time, delta) {
     if (!this.player) return;
