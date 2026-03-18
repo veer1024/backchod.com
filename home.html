@@ -504,6 +504,53 @@
   background: #dbeafe;
   color: #1d4ed8;
 }
+
+.market-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px;
+  background: #fff;
+  border: 2px dashed rgba(31,41,55,0.14);
+  border-radius: 18px;
+}
+
+.market-tab-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fffdf8;
+  border: 2px solid rgba(31,41,55,0.14);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+
+.market-tab-check input {
+  transform: scale(1.15);
+  margin: 0;
+}
+
+.market-tab-check span {
+  display: inline-block;
+}
+
+.adult-market-check {
+  background: #fff3cd;
+}
+
+.market-subscreen {
+  display: none;
+  margin-top: 10px;
+}
+
+.market-subscreen.active {
+  display: block;
+  animation: screenPop 0.22s ease;
+}
   </style>
 </head>
 <body>
@@ -615,34 +662,48 @@
     <section class="screen" id="marketplaceScreen">
       <h2>Meme Marketplace</h2>
 
-      <!-- CUTIE -->
-      <h3>💖 For Cutie (Certified Soft Bakchod Content)</h3>
-      <div class="market-grid" id="cutieGrid"></div>
+      <div class="market-filter-bar">
+        <label class="market-tab-check">
+          <input type="checkbox" class="market-toggle" data-target="cutiePanel" checked>
+          <span>💖 For Cutie</span>
+        </label>
 
-      <!-- NON ADULT -->
-      <h3>😂 WhatsApp Stickers (Public Safe Chaos)</h3>
-      <div class="market-grid" id="nonAdultGrid"></div>
+        <label class="market-tab-check">
+          <input type="checkbox" class="market-toggle" data-target="nonAdultPanel" checked>
+          <span>😂 Non-Adult</span>
+        </label>
 
-      <!-- ADULT -->
-      <h3>🔞 Adult Stickers (Proceed with regret)</h3>
-
-      <div class="adult-lock-box">
-        <div class="adult-lock-text">
-          <strong>Adult Sticker Vault</strong><br>
-          Locked by Ministry order. Toggle access if you are emotionally prepared.
-        </div>
-
-        <label class="adult-switch">
-          <input type="checkbox" id="adultToggle">
-          <span class="adult-slider"></span>
+        <label class="market-tab-check adult-market-check">
+          <input type="checkbox" class="market-toggle" id="adultToggle" data-target="adultPanel">
+          <span>🔞 Adult</span>
         </label>
       </div>
 
-      <div id="adultLockedMessage" class="adult-placeholder">
-        Adult stickers are hidden. Flip the switch to request irresponsible access.
+      <div class="market-subscreen active" id="cutiePanel">
+        <h3>💖 For Cutie (Certified Soft Bakchod Content)</h3>
+        <div class="market-grid" id="cutieGrid"></div>
       </div>
 
-      <div class="market-grid" id="adultGrid" style="display:none;"></div>
+      <div class="market-subscreen active" id="nonAdultPanel">
+        <h3>😂 WhatsApp Stickers (Public Safe Chaos)</h3>
+        <div class="market-grid" id="nonAdultGrid"></div>
+      </div>
+
+      <div class="market-subscreen" id="adultPanel">
+        <div class="adult-lock-box">
+          <div class="adult-lock-text">
+            <strong>Adult Sticker Vault</strong><br>
+            You unlocked this with full bakchod intent. Proceed carefully.
+          </div>
+        </div>
+
+        <h3>🔞 Adult Stickers (Proceed with regret)</h3>
+        <div class="market-grid" id="adultGrid"></div>
+      </div>
+
+      <div id="adultLockedMessage" class="adult-placeholder" style="display:none;">
+        Adult stickers are hidden. Tick the Adult tab to request irresponsible access.
+      </div>
     </section>
 
     <section class="screen" id="gamesScreen">
@@ -785,8 +846,8 @@ function downloadSticker(path) {
 
 loadStickers();
 
+const marketToggles = document.querySelectorAll(".market-toggle");
 const adultToggle = document.getElementById("adultToggle");
-const adultGrid = document.getElementById("adultGrid");
 const adultLockedMessage = document.getElementById("adultLockedMessage");
 const adultDisclaimerOverlay = document.getElementById("adultDisclaimerOverlay");
 const adultConfirmBtn = document.getElementById("adultConfirmBtn");
@@ -794,44 +855,76 @@ const adultCancelBtn = document.getElementById("adultCancelBtn");
 
 let adultAccessApproved = false;
 
-adultToggle.addEventListener("change", () => {
-  if (adultToggle.checked) {
-    if (!adultAccessApproved) {
-      adultDisclaimerOverlay.classList.add("show");
+function updateMarketplacePanels() {
+  marketToggles.forEach(toggle => {
+    const panel = document.getElementById(toggle.dataset.target);
+    if (!panel) return;
+
+    if (toggle.id === "adultToggle") {
+      if (toggle.checked && adultAccessApproved) {
+        panel.classList.add("active");
+      } else {
+        panel.classList.remove("active");
+      }
     } else {
-      adultGrid.style.display = "grid";
-      adultLockedMessage.style.display = "none";
+      if (toggle.checked) {
+        panel.classList.add("active");
+      } else {
+        panel.classList.remove("active");
+      }
     }
-  } else {
-    adultGrid.style.display = "none";
+  });
+
+  if (adultToggle.checked && !adultAccessApproved) {
     adultLockedMessage.style.display = "block";
+  } else {
+    adultLockedMessage.style.display = "none";
   }
+}
+
+marketToggles.forEach(toggle => {
+  toggle.addEventListener("change", () => {
+    if (toggle.id === "adultToggle") {
+      if (toggle.checked) {
+        if (!adultAccessApproved) {
+          adultDisclaimerOverlay.classList.add("show");
+          adultLockedMessage.style.display = "block";
+        } else {
+          updateMarketplacePanels();
+        }
+      } else {
+        updateMarketplacePanels();
+      }
+    } else {
+      updateMarketplacePanels();
+    }
+  });
 });
 
 adultConfirmBtn.addEventListener("click", () => {
   adultAccessApproved = true;
   adultDisclaimerOverlay.classList.remove("show");
   adultToggle.checked = true;
-  adultGrid.style.display = "grid";
-  adultLockedMessage.style.display = "none";
+  updateMarketplacePanels();
 });
 
 adultCancelBtn.addEventListener("click", () => {
   adultDisclaimerOverlay.classList.remove("show");
   adultToggle.checked = false;
-  adultGrid.style.display = "none";
-  adultLockedMessage.style.display = "block";
+  adultAccessApproved = false;
+  updateMarketplacePanels();
 });
 
 adultDisclaimerOverlay.addEventListener("click", (e) => {
   if (e.target === adultDisclaimerOverlay) {
     adultDisclaimerOverlay.classList.remove("show");
     adultToggle.checked = false;
-    adultGrid.style.display = "none";
-    adultLockedMessage.style.display = "block";
+    adultAccessApproved = false;
+    updateMarketplacePanels();
   }
 });
 
+updateMarketplacePanels();
 
   </script>
 </body>
