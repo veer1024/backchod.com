@@ -551,6 +551,44 @@
   display: block;
   animation: screenPop 0.22s ease;
 }
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+}
+
+/* Fix ugly button */
+.play-btn {
+  margin-top: 16px;
+  align-self: flex-start;
+
+  background: #fde68a;
+  border: 2px solid #111;
+  border-radius: 16px;
+
+  padding: 10px 20px;
+  font-size: 18px;
+  font-family: "Patrick Hand", cursive;
+
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+
+  transition: 0.2s ease;
+}
+
+/* Hover effect */
+.play-btn:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  background: #fcd34d;
+}
+
+/* Click effect */
+.play-btn:active {
+  transform: scale(0.95);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
   </style>
 </head>
 <body>
@@ -724,10 +762,13 @@
           <p>Identify suspicious people using zero evidence and full confidence.</p>
           <span class="tag">Soon</span>
         </div>
-        <div class="fun-card">
-          <h3>Captcha Revenge</h3>
+        <div class="fun-card game-card">
+          <h3>🎮 Captcha Revenge</h3>
           <p>Face 900 fake captchas and survive emotionally.</p>
-          <span class="tag">In Development</span>
+
+          <button class="play-btn" onclick="openCaptchaGame()">
+            ▶ Play Now
+          </button>
         </div>
         <div class="fun-card">
           <h3>Leaderboard War</h3>
@@ -770,7 +811,19 @@
     gtag('js', new Date());
     gtag('config', 'G-4QYVGGG0F1');
   </script>
+
+ <script>
+function openCaptchaGame() {
+  window.open(
+    "games/captcha-revenge.html",
+    "captchaGame",
+    "width=500,height=700,top=100,left=200"
+  );
+}
+</script>
   <script>
+
+
     const name = localStorage.getItem("bc_name") || "Unknown Creature";
     const dob = localStorage.getItem("bc_dob") || "??/??/????";
     const gender = localStorage.getItem("bc_gender") || "Undefined";

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Captcha Revenge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: "Patrick Hand", cursive;
+  background: linear-gradient(135deg, #fff7ed, #fff1f2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-container {
+  width: 95%;
+  max-width: 520px;
+  background: white;
+  border: 3px solid #111;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-family: "Caveat", cursive;
+  font-size: 42px;
+  margin: 0 0 10px;
+}
+
+.question {
+  font-size: 22px;
+  margin: 20px 0;
+  min-height: 60px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.box {
+  background: #f3f4f6;
+  border: 2px solid #111;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.box.selected {
+  background: #86efac;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 2px solid #111;
+  background: #fde68a;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.result {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+  <h1>Captcha Revenge</h1>
+
+  <div class="question" id="questionText"></div>
+
+  <div class="grid" id="grid"></div>
+
+  <button onclick="submitCaptcha()">Verify</button>
+
+  <div class="result" id="resultText"></div>
+
+  <button id="nextBtn" class="hidden" onclick="nextRound()">Next Captcha</button>
+</div>
+
+<script>
+const questions = [
+  "Select all images with emotional damage",
+  "Click all boxes that contain trust issues",
+  "Identify squares with government job energy",
+  "Select all images where life went wrong",
+  "Find all boxes containing overthinking",
+  "Select all squares that scream 'bhai kya kar raha hai life me'"
+];
+
+const words = [
+  "Pain", "Regret", "Confusion", "Tax", "Relatives",
+  "Job", "Marriage", "Monday", "Anxiety"
+];
+
+let currentQuestion = 0;
+
+function generateGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  for (let i = 0; i < 9; i++) {
+    const box = document.createElement("div");
+    box.className = "box";
+    box.textContent = words[Math.floor(Math.random() * words.length)];
+
+    box.onclick = () => {
+      box.classList.toggle("selected");
+    };
+
+    grid.appendChild(box);
+  }
+}
+
+function loadQuestion() {
+  const q = questions[Math.floor(Math.random() * questions.length)];
+  document.getElementById("questionText").textContent = q;
+}
+
+function submitCaptcha() {
+  const result = document.getElementById("resultText");
+
+  const responses = [
+    "Wrong. You missed the obvious pain.",
+    "Incorrect. Even AI is disappointed.",
+    "Verification failed. Try being smarter.",
+    "Access denied. Emotional damage detected.",
+    "You selected incorrectly. Life continues.",
+    "Wrong answer. Restart your existence."
+  ];
+
+  result.textContent = responses[Math.floor(Math.random() * responses.length)];
+
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextRound() {
+  document.getElementById("resultText").textContent = "";
+  document.getElementById("nextBtn").classList.add("hidden");
+  generateGrid();
+  loadQuestion();
+}
+
+generateGrid();
+loadQuestion();
+</script>
+
+</body>
+</html>
