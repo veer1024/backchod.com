@@ -669,6 +669,11 @@
         </label>
 
         <label class="market-tab-check">
+          <input type="checkbox" class="market-toggle" data-target="baatchitPanel" checked>
+          <span>🗣️ Baatchit</span>
+        </label>
+
+        <label class="market-tab-check">
           <input type="checkbox" class="market-toggle" data-target="nonAdultPanel" checked>
           <span>😂 Non-Adult</span>
         </label>
@@ -682,6 +687,11 @@
       <div class="market-subscreen active" id="cutiePanel">
         <h3>💖 For Cutie (Certified Soft Bakchod Content)</h3>
         <div class="market-grid" id="cutieGrid"></div>
+      </div>
+
+      <div class="market-subscreen active" id="baatchitPanel">
+        <h3>🗣️ Baatchit (Conversation Grade Bakchodi)</h3>
+        <div class="market-grid" id="baatchitGrid"></div>
       </div>
 
       <div class="market-subscreen active" id="nonAdultPanel">
@@ -801,13 +811,14 @@
 
 
     async function loadStickers() {
-  const res = await fetch("stickers.json");
-  const data = await res.json();
+      const res = await fetch("stickers.json");
+      const data = await res.json();
 
-  renderCategory(data["forcutie"], "cutieGrid", "forcutie");
-  renderCategory(data["whatsappstickers-nonadult"], "nonAdultGrid", "whatsappstickers-nonadult");
-  renderCategory(data["whatsappstickers-adult"], "adultGrid", "whatsappstickers-adult");
-}
+      renderCategory(data["forcutie"] || [], "cutieGrid", "forcutie");
+      renderCategory(data["baatchit"] || [], "baatchitGrid", "baatchit");
+      renderCategory(data["whatsappstickers-nonadult"] || [], "nonAdultGrid", "whatsappstickers-nonadult");
+      renderCategory(data["whatsappstickers-adult"] || [], "adultGrid", "whatsappstickers-adult");
+    }
 
 function renderCategory(files, containerId, folder) {
   const container = document.getElementById(containerId);
