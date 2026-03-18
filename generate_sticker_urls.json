@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BASE_URL="https://backchod.com"
+MEME_DIR="memesection"
+OUTPUT_FILE="stickers_urls.json"
+
+if [[ ! -d "$MEME_DIR" ]]; then
+  echo "Error: '$MEME_DIR' folder not found in current directory."
+  exit 1
+fi
+
+tmp_file="$(mktemp)"
+
+{
+  echo "{"
+
+  first_category=true
+
+  while IFS= read -r -d '' dir; do
+    category="$(basename "$dir")"
+
+    if [[ "$first_category" = true ]]; then
+      first_category=false
+    else
+      echo ","
+    fi
+
+    printf '  "%s": [\n' "$category"
+
+    first_file=true
+
+    while IFS= read -r -d '' file; do
+      rel_path="${file#./}"
+      url="${BASE_URL}/${rel_path}"
+
+      if [[ "$first_file" = true ]]; then
+        first_file=false
+      else
+        echo ","
+      fi
+
+      printf '    "%s"' "$url"
+    done < <(
+      find "./$MEME_DIR/$category" -maxdepth 1 -type f \
+        \( -iname "*.webp" -o -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.gif" \) \
+        -print0 | sort -z
+    )
+
+    echo
+    printf '  ]'
+  done < <(find "./$MEME_DIR" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
+
+  echo
+  echo "}"
+} > "$tmp_file"
+
+mv "$tmp_file" "$OUTPUT_FILE"
+
+echo "Generated $OUTPUT_FILE successfully."
