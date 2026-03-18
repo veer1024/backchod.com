@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pak Runner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">Pak Runner</div>
+      <div class="hud">
+        <div class="hud-box">Score: <span id="scoreValue">0</span></div>
+        <div class="hud-box">Coins: <span id="coinValue">0</span></div>
+        <div class="hud-box">Best: <span id="bestValue">0</span></div>
+        <div class="hud-box">Action: <span id="actionValue">Idle</span></div>
+      </div>
+    </div>
+
+    <div id="gameShell">
+      <div id="gameContainer"></div>
+
+      <div class="overlay show" id="startOverlay">
+        <div class="panel">
+          <h1>Pak Runner</h1>
+          <p>
+            Move only with your voice.<br>
+            Silence = stop. Medium pak = move. Loud PAK = jump.
+          </p>
+          <button id="startBtn" class="main-btn">Start Pak Mode</button>
+        </div>
+      </div>
+
+      <div class="overlay" id="calibrationOverlay">
+        <div class="panel">
+          <h2>Mic Calibration</h2>
+          <p id="calibrationText">Press begin to calibrate your pak power.</p>
+          <div class="meter-wrap">
+            <div class="meter-bar" id="meterBar"></div>
+          </div>
+          <button id="calibrationBtn" class="main-btn">Begin Calibration</button>
+        </div>
+      </div>
+
+      <div class="overlay" id="gameOverOverlay">
+        <div class="panel">
+          <h2>Game Over</h2>
+          <p id="gameOverText">You were defeated by unemployment and poor pak discipline.</p>
+          <button id="restartBtn" class="main-btn">Play Again</button>
+        </div>
+      </div>
+
+      <div class="mic-status" id="micStatus">Mic: Not started</div>
+    </div>
+  </div>
+
+  <script type="module" src="./ui.js"></script>
+</body>
+</html>
