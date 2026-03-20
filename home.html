@@ -11,7 +11,7 @@
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5440180307227003"
      crossorigin="anonymous"></script>
-     <meta name="google-adsense-account" content="ca-pub-5440180307227003">
+  <meta name="google-adsense-account" content="ca-pub-5440180307227003">
 
   <style>
     * {
@@ -330,6 +330,220 @@
       margin: 18px 0 8px;
     }
 
+    .adult-lock-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #fff3cd;
+      border: 2px dashed #92400e;
+      padding: 16px;
+      border-radius: 18px;
+      margin-bottom: 14px;
+    }
+
+    .adult-lock-text {
+      font-size: 20px;
+      line-height: 1.4;
+      color: #7c2d12;
+    }
+
+    .adult-placeholder {
+      background: #fff;
+      border: 2px dashed rgba(31,41,55,0.14);
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 20px;
+      color: #6b7280;
+      margin-bottom: 14px;
+    }
+
+    .adult-disclaimer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .adult-disclaimer-overlay.show {
+      display: flex;
+    }
+
+    .adult-disclaimer-box {
+      width: min(560px, 100%);
+      background: #fffdf8;
+      border: 3px solid var(--ink);
+      border-radius: 24px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.20);
+      padding: 24px;
+      animation: screenPop 0.25s ease;
+    }
+
+    .adult-disclaimer-box h3 {
+      margin: 0 0 12px 0;
+      font-size: 38px;
+      font-family: "Caveat", cursive;
+      color: #b91c1c;
+    }
+
+    .adult-disclaimer-box p {
+      margin: 0 0 18px 0;
+      font-size: 22px;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .adult-disclaimer-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .adult-btn {
+      border: 2px solid var(--ink);
+      border-radius: 16px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-family: "Patrick Hand", cursive;
+      font-size: 20px;
+      box-shadow: 4px 4px 0 rgba(31,41,55,0.10);
+      background: #fff;
+    }
+
+    .adult-btn.confirm {
+      background: #fecaca;
+      color: #7f1d1d;
+    }
+
+    .adult-btn.cancel {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .market-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 14px;
+      background: #fff;
+      border: 2px dashed rgba(31,41,55,0.14);
+      border-radius: 18px;
+    }
+
+    .market-tab-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fffdf8;
+      border: 2px solid rgba(31,41,55,0.14);
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 20px;
+      user-select: none;
+    }
+
+    .market-tab-check input {
+      transform: scale(1.15);
+      margin: 0;
+    }
+
+    .market-tab-check span {
+      display: inline-block;
+    }
+
+    .adult-market-check {
+      background: #fff3cd;
+    }
+
+    .market-subscreen {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .market-subscreen.active {
+      display: block;
+      animation: screenPop 0.22s ease;
+    }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+    }
+
+    .play-btn {
+      margin-top: 16px;
+      align-self: flex-start;
+      background: #fde68a;
+      border: 2px solid #111;
+      border-radius: 16px;
+      padding: 10px 20px;
+      font-size: 18px;
+      font-family: "Patrick Hand", cursive;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+      transition: 0.2s ease;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-2px) rotate(-1deg);
+      background: #fcd34d;
+    }
+
+    .play-btn:active {
+      transform: scale(0.95);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+
+    .market-card-image {
+      width: 100%;
+      height: 140px;
+      object-fit: contain;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      background: #fffefb;
+      border: 1px dashed rgba(31,41,55,0.12);
+      padding: 6px;
+    }
+
+    .market-download-btn {
+  width: 100%;
+  margin-top: 10px;
+
+  background: #fde68a; /* same yellow as Play button */
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+
+  padding: 10px 16px;
+  font-size: 18px;
+  font-family: "Patrick Hand", cursive;
+
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+
+  transition: 0.2s ease;
+}
+
+/* hover = playful tilt */
+.market-download-btn:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  background: #fcd34d;
+}
+
+/* click press effect */
+.market-download-btn:active {
+  transform: scale(0.95);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
     @media (max-width: 900px) {
       .grid,
       .market-grid,
@@ -364,127 +578,61 @@
       }
     }
 
-    .adult-lock-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  background: #fff3cd;
-  border: 2px dashed #92400e;
-  padding: 16px;
-  border-radius: 18px;
-  margin-bottom: 14px;
-}
+    
 
-.adult-lock-text {
-  font-size: 20px;
-  line-height: 1.4;
-  color: #7c2d12;
-}
 
-.adult-placeholder {
-  background: #fff;
-  border: 2px dashed rgba(31,41,55,0.14);
-  border-radius: 18px;
-  padding: 18px;
-  font-size: 20px;
-  color: #6b7280;
-  margin-bottom: 14px;
-}
 
-.adult-switch {
-  position: relative;
-  width: 74px;
-  height: 40px;
-  flex: 0 0 74px;
-  display: inline-block;
-}
 
-.adult-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
 
-.adult-slider {
-  position: absolute;
-  inset: 0;
-  cursor: pointer;
-  background: #fecaca;
-  border: 2px solid var(--ink);
-  border-radius: 999px;
-  transition: 0.25s ease;
-  box-shadow: 4px 4px 0 rgba(31,41,55,0.10);
-}
 
-.adult-slider::before {
-  content: "";
-  position: absolute;
-  height: 26px;
-  width: 26px;
-  left: 5px;
-  top: 5px;
-  background: white;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  transition: 0.25s ease;
-}
 
-.adult-switch input:checked + .adult-slider {
-  background: #86efac;
-}
-
-.adult-switch input:checked + .adult-slider::before {
-  transform: translateX(32px);
-}
-
-.adult-disclaimer-overlay {
+.whatsapp-popup-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.42);
   display: none;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 999;
+  z-index: 1200;
 }
 
-.adult-disclaimer-overlay.show {
+.whatsapp-popup-overlay.show {
   display: flex;
 }
 
-.adult-disclaimer-box {
-  width: min(560px, 100%);
+.whatsapp-popup-box {
+  width: min(540px, 100%);
   background: #fffdf8;
   border: 3px solid var(--ink);
   border-radius: 24px;
   box-shadow: 0 24px 70px rgba(0,0,0,0.20);
   padding: 24px;
-  animation: screenPop 0.25s ease;
+  animation: screenPop 0.22s ease;
 }
 
-.adult-disclaimer-box h3 {
+.whatsapp-popup-box h3 {
   margin: 0 0 12px 0;
-  font-size: 38px;
+  font-size: 40px;
   font-family: "Caveat", cursive;
-  color: #b91c1c;
+  color: #16a34a;
 }
 
-.adult-disclaimer-box p {
+.whatsapp-popup-box p {
   margin: 0 0 18px 0;
   font-size: 22px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: #374151;
 }
 
-.adult-disclaimer-actions {
+.whatsapp-popup-actions {
   display: flex;
-  gap: 12px;
   justify-content: flex-end;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.adult-btn {
+.whatsapp-popup-btn {
   border: 2px solid var(--ink);
   border-radius: 16px;
   padding: 10px 16px;
@@ -495,99 +643,14 @@
   background: #fff;
 }
 
-.adult-btn.confirm {
-  background: #fecaca;
-  color: #7f1d1d;
+.whatsapp-popup-btn.primary {
+  background: #dcfce7;
+  color: #166534;
 }
 
-.adult-btn.cancel {
+.whatsapp-popup-btn.secondary {
   background: #dbeafe;
   color: #1d4ed8;
-}
-
-.market-filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 18px;
-  padding: 14px;
-  background: #fff;
-  border: 2px dashed rgba(31,41,55,0.14);
-  border-radius: 18px;
-}
-
-.market-tab-check {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background: #fffdf8;
-  border: 2px solid rgba(31,41,55,0.14);
-  border-radius: 14px;
-  cursor: pointer;
-  font-size: 20px;
-  user-select: none;
-}
-
-.market-tab-check input {
-  transform: scale(1.15);
-  margin: 0;
-}
-
-.market-tab-check span {
-  display: inline-block;
-}
-
-.adult-market-check {
-  background: #fff3cd;
-}
-
-.market-subscreen {
-  display: none;
-  margin-top: 10px;
-}
-
-.market-subscreen.active {
-  display: block;
-  animation: screenPop 0.22s ease;
-}
-
-.game-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 22px;
-}
-
-/* Fix ugly button */
-.play-btn {
-  margin-top: 16px;
-  align-self: flex-start;
-
-  background: #fde68a;
-  border: 2px solid #111;
-  border-radius: 16px;
-
-  padding: 10px 20px;
-  font-size: 18px;
-  font-family: "Patrick Hand", cursive;
-
-  cursor: pointer;
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
-
-  transition: 0.2s ease;
-}
-
-/* Hover effect */
-.play-btn:hover {
-  transform: translateY(-2px) rotate(-1deg);
-  background: #fcd34d;
-}
-
-/* Click effect */
-.play-btn:active {
-  transform: scale(0.95);
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
 }
   </style>
 </head>
@@ -700,57 +763,16 @@
     <section class="screen" id="marketplaceScreen">
       <h2>Meme Marketplace</h2>
 
-      <div class="market-filter-bar">
-        <label class="market-tab-check">
-          <input type="checkbox" class="market-toggle" data-target="cutiePanel" checked>
-          <span>💖 For Cutie</span>
-        </label>
-
-        <label class="market-tab-check">
-          <input type="checkbox" class="market-toggle" data-target="baatchitPanel" checked>
-          <span>🗣️ Baatchit</span>
-        </label>
-
-        <label class="market-tab-check">
-          <input type="checkbox" class="market-toggle" data-target="nonAdultPanel" checked>
-          <span>😂 Non-Adult</span>
-        </label>
-
-        <label class="market-tab-check adult-market-check">
-          <input type="checkbox" class="market-toggle" id="adultToggle" data-target="adultPanel">
-          <span>🔞 Adult</span>
-        </label>
-      </div>
-
-      <div class="market-subscreen active" id="cutiePanel">
-        <h3>💖 For Cutie (Certified Soft Bakchod Content)</h3>
-        <div class="market-grid" id="cutieGrid"></div>
-      </div>
-
-      <div class="market-subscreen active" id="baatchitPanel">
-        <h3>🗣️ Baatchit (Conversation Grade Bakchodi)</h3>
-        <div class="market-grid" id="baatchitGrid"></div>
-      </div>
-
-      <div class="market-subscreen active" id="nonAdultPanel">
-        <h3>😂 WhatsApp Stickers (Public Safe Chaos)</h3>
-        <div class="market-grid" id="nonAdultGrid"></div>
-      </div>
-
-      <div class="market-subscreen" id="adultPanel">
-        <div class="adult-lock-box">
-          <div class="adult-lock-text">
-            <strong>Adult Sticker Vault</strong><br>
-            You unlocked this with full bakchod intent. Proceed carefully.
-          </div>
-        </div>
-
-        <h3>🔞 Adult Stickers (Proceed with regret)</h3>
-        <div class="market-grid" id="adultGrid"></div>
+      <div class="market-filter-bar" id="marketFilterBar">
+        <!-- dynamic category toggles -->
       </div>
 
       <div id="adultLockedMessage" class="adult-placeholder" style="display:none;">
-        Adult stickers are hidden. Tick the Adult tab to request irresponsible access.
+        Adult stickers are hidden. Tick the adult tab to request irresponsible access.
+      </div>
+
+      <div id="marketPanelsWrap">
+        <!-- dynamic category panels -->
       </div>
     </section>
 
@@ -762,19 +784,19 @@
           <p>Identify suspicious people using zero evidence and full confidence.</p>
           <span class="tag">Soon</span>
         </div>
+
         <div class="fun-card game-card">
           <h3>🎮 Captcha Revenge</h3>
           <p>Face 900 fake captchas and survive emotionally.</p>
-
-          <button class="play-btn" onclick="openCaptchaGame()">
-            ▶ Play Now
-          </button>
+          <button class="play-btn" onclick="openCaptchaGame()">▶ Play Now</button>
         </div>
+
         <div class="fun-card game-card" onclick="window.open('games/pak-runner/index.html', '_blank')">
           <h3>🗣️ Pak Runner</h3>
           <p>Run using only pak-powered voice control.</p>
           <button class="play-btn" type="button">▶ Play Now</button>
         </div>
+
         <div class="fun-card">
           <h3>Leaderboard War</h3>
           <p>Compete globally in advanced nonsense metrics.</p>
@@ -808,7 +830,24 @@
   </div>
 
 
-<!-- Google tag (gtag.js) -->
+  <div class="whatsapp-popup-overlay" id="whatsappPopupOverlay">
+  <div class="whatsapp-popup-box">
+    <h3>Add to WhatsApp? 👀</h3>
+    <p id="whatsappPopupMessage">
+      Ohooo... direct WhatsApp import chahiye?<br><br>
+      App abhi under construction hai.<br>
+      Ministry ke engineers chai break pe hain.<br><br>
+      <strong>App Coming Soon.</strong>
+    </p>
+
+    <div class="whatsapp-popup-actions">
+      <button class="whatsapp-popup-btn secondary" id="whatsappPopupCloseBtn">Thik hai, wait karunga</button>
+      <button class="whatsapp-popup-btn primary" id="whatsappPopupStoreBtn">Play Store pe le chalo</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4QYVGGG0F1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -817,18 +856,17 @@
     gtag('config', 'G-4QYVGGG0F1');
   </script>
 
- <script>
-function openCaptchaGame() {
-  window.open(
-    "games/captcha-revenge.html",
-    "captchaGame",
-    "width=500,height=700,top=100,left=200"
-  );
-}
-</script>
   <script>
+    function openCaptchaGame() {
+      window.open(
+        "games/captcha-revenge.html",
+        "captchaGame",
+        "width=500,height=700,top=100,left=200"
+      );
+    }
+  </script>
 
-
+  <script>
     const name = localStorage.getItem("bc_name") || "Unknown Creature";
     const dob = localStorage.getItem("bc_dob") || "??/??/????";
     const gender = localStorage.getItem("bc_gender") || "Undefined";
@@ -844,9 +882,10 @@ function openCaptchaGame() {
     document.getElementById("profileVerifyTime").textContent = verifyTime;
     document.getElementById("profileFunnyScore").textContent = funnyScore;
     document.getElementById("profileFunnyRank").textContent = funnyRank;
-
     document.getElementById("currentUserBoardName").textContent = `${name} (probably)`;
     document.getElementById("currentUserBoardScore").textContent = `Score: ${funnyScore}`;
+
+
 
     const navButtons = document.querySelectorAll(".nav-btn");
     const screens = document.querySelectorAll(".screen");
@@ -858,143 +897,291 @@ function openCaptchaGame() {
         navButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
 
-        screens.forEach((screen) => {
-          screen.classList.remove("active");
-        });
-
+        screens.forEach((screen) => screen.classList.remove("active"));
         document.getElementById(target).classList.add("active");
+
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     });
 
+    const adultLockedMessage = document.getElementById("adultLockedMessage");
+    const adultDisclaimerOverlay = document.getElementById("adultDisclaimerOverlay");
+    const adultConfirmBtn = document.getElementById("adultConfirmBtn");
+    const adultCancelBtn = document.getElementById("adultCancelBtn");
+    const marketFilterBar = document.getElementById("marketFilterBar");
+    const marketPanelsWrap = document.getElementById("marketPanelsWrap");
 
-    async function loadStickers() {
-      const res = await fetch("stickers.json");
-      const data = await res.json();
+    let adultAccessApproved = false;
+    let pendingAdultToggle = null;
 
-      renderCategory(data["forcutie"] || [], "cutieGrid", "forcutie");
-      renderCategory(data["baatchit"] || [], "baatchitGrid", "baatchit");
-      renderCategory(data["whatsappstickers-nonadult"] || [], "nonAdultGrid", "whatsappstickers-nonadult");
-      renderCategory(data["whatsappstickers-adult"] || [], "adultGrid", "whatsappstickers-adult");
-    }
+    const PLAY_STORE_URL = "#"; // later replace with your real Play Store link
 
-function renderCategory(files, containerId, folder) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
+const whatsappPopupOverlay = document.getElementById("whatsappPopupOverlay");
+const whatsappPopupMessage = document.getElementById("whatsappPopupMessage");
+const whatsappPopupCloseBtn = document.getElementById("whatsappPopupCloseBtn");
+const whatsappPopupStoreBtn = document.getElementById("whatsappPopupStoreBtn");
 
-  files.forEach(file => {
-    const path = `memesection/${folder}/${file}`;
-
-    const card = document.createElement("div");
-    card.className = "fun-card";
-
-    card.innerHTML = `
-      <img src="${path}" style="
-        width:100%;
-        height:140px;
-        object-fit:contain;
-        margin-bottom:8px;
-      ">
-
-      <button onclick="downloadSticker('${path}')"
-        style="width:100%; padding:8px; border-radius:12px;">
-        Download
-      </button>
-    `;
-
-    container.appendChild(card);
-  });
+function openWhatsappPopup(message) {
+  whatsappPopupMessage.innerHTML = message;
+  whatsappPopupOverlay.classList.add("show");
 }
 
-function downloadSticker(path) {
-  const a = document.createElement("a");
-  a.href = path;
-  a.download = "";
-  a.click();
+function closeWhatsappPopup() {
+  whatsappPopupOverlay.classList.remove("show");
 }
 
-loadStickers();
+function handleAddToWhatsapp(path, category, fileName) {
+  const funnyMessages = [
+    `Arre wah, <strong>${fileName}</strong> seedha WhatsApp mein daalna hai?<br><br>
+     Hamara sticker app abhi cooker mein pak raha hai.<br>
+     Developer ne bola: “bas 2 din aur”, aur woh 11th time bola hai.<br><br>
+     <strong>App Coming Soon. Tab tak patience install karo.</strong>`,
 
-const marketToggles = document.querySelectorAll(".market-toggle");
-const adultToggle = document.getElementById("adultToggle");
-const adultLockedMessage = document.getElementById("adultLockedMessage");
-const adultDisclaimerOverlay = document.getElementById("adultDisclaimerOverlay");
-const adultConfirmBtn = document.getElementById("adultConfirmBtn");
-const adultCancelBtn = document.getElementById("adultCancelBtn");
+    `Oho, premium laziness detected.<br><br>
+     Download karke manually import karna aapke royal standards ke neeche hai, samajh gaye.<br>
+     Isliye app bana rahe hain.<br><br>
+     <strong>App Coming Soon. Thoda sa aur bakchod wait karo.</strong>`,
 
-let adultAccessApproved = false;
+    `WhatsApp import button dabaya gaya hai with full confidence.<br><br>
+     Lekin app abhi Play Store ke darwaze pe chappal pehen raha hai.<br>
+     Abhi andar nahi gaya hai.<br><br>
+     <strong>App Coming Soon. Ministry regrets the drama.</strong>`
+  ];
 
-function updateMarketplacePanels() {
-  marketToggles.forEach(toggle => {
-    const panel = document.getElementById(toggle.dataset.target);
-    if (!panel) return;
+  const message = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+  openWhatsappPopup(message);
+}
 
-    if (toggle.id === "adultToggle") {
-      if (toggle.checked && adultAccessApproved) {
-        panel.classList.add("active");
-      } else {
-        panel.classList.remove("active");
-      }
-    } else {
-      if (toggle.checked) {
-        panel.classList.add("active");
-      } else {
-        panel.classList.remove("active");
-      }
-    }
-  });
+whatsappPopupCloseBtn.addEventListener("click", closeWhatsappPopup);
 
-  if (adultToggle.checked && !adultAccessApproved) {
-    adultLockedMessage.style.display = "block";
-  } else {
-    adultLockedMessage.style.display = "none";
+whatsappPopupStoreBtn.addEventListener("click", () => {
+  if (PLAY_STORE_URL === "#") {
+    openWhatsappPopup(`
+      Play Store link abhi tak paida nahi hua hai 😔<br><br>
+      App Coming Soon.<br>
+      Tab tak website pe memes dekh ke apni aatma strong rakho.
+    `);
+    return;
   }
-}
 
-marketToggles.forEach(toggle => {
-  toggle.addEventListener("change", () => {
-    if (toggle.id === "adultToggle") {
-      if (toggle.checked) {
-        if (!adultAccessApproved) {
-          adultDisclaimerOverlay.classList.add("show");
-          adultLockedMessage.style.display = "block";
+  window.open(PLAY_STORE_URL, "_blank");
+});
+
+whatsappPopupOverlay.addEventListener("click", (e) => {
+  if (e.target === whatsappPopupOverlay) {
+    closeWhatsappPopup();
+  }
+});
+
+    function prettifyCategoryName(category) {
+      return category
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, ch => ch.toUpperCase());
+    }
+
+    function isAdultCategory(category) {
+      const key = category.toLowerCase();
+      return key.includes("adult") && !key.includes("nonadult");
+    }
+
+    function getCategoryEmoji(category) {
+      const key = category.toLowerCase();
+
+      if (key.includes("adult")) return "🔞";
+      if (key.includes("cutie")) return "💖";
+      if (key.includes("baatchit")) return "🗣️";
+      if (key.includes("festival")) return "🎉";
+      if (key.includes("pubg")) return "🎮";
+      if (key.includes("nonadult")) return "😂";
+      return "✨";
+    }
+
+    function makePanelId(category) {
+      return `panel-${category.replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+    }
+
+    function renderCategory(files, container, category) {
+      container.innerHTML = "";
+
+      files.forEach(file => {
+        const path = `memesection/${category}/${file}`;
+
+        const card = document.createElement("div");
+        card.className = "fun-card";
+
+        card.innerHTML = `
+          <img src="${path}" class="market-card-image" alt="${file}">
+          <button class="market-download-btn" onclick="handleAddToWhatsapp('${path}', '${category}', '${file.replace(/'/g, "\\'")}')">
+            Add to WhatsApp
+          </button>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    
+
+    function updateMarketplacePanels() {
+      const toggles = document.querySelectorAll(".market-toggle");
+      let showAdultWarning = false;
+
+      toggles.forEach(toggle => {
+        const panel = document.getElementById(toggle.dataset.target);
+        if (!panel) return;
+
+        const category = toggle.dataset.category || "";
+        const adult = isAdultCategory(category);
+
+        if (adult) {
+          if (toggle.checked && adultAccessApproved) {
+            panel.classList.add("active");
+          } else {
+            panel.classList.remove("active");
+          }
+
+          if (toggle.checked && !adultAccessApproved) {
+            showAdultWarning = true;
+          }
         } else {
-          updateMarketplacePanels();
+          if (toggle.checked) {
+            panel.classList.add("active");
+          } else {
+            panel.classList.remove("active");
+          }
         }
-      } else {
-        updateMarketplacePanels();
-      }
-    } else {
+      });
+
+      adultLockedMessage.style.display = showAdultWarning ? "block" : "none";
+    }
+
+    function buildMarketplace(data) {
+      marketFilterBar.innerHTML = "";
+      marketPanelsWrap.innerHTML = "";
+
+      Object.entries(data).forEach(([category, files]) => {
+        const adult = isAdultCategory(category);
+        const panelId = makePanelId(category);
+        const emoji = getCategoryEmoji(category);
+        const prettyName = prettifyCategoryName(category);
+
+        const label = document.createElement("label");
+        label.className = `market-tab-check${adult ? " adult-market-check" : ""}`;
+        label.innerHTML = `
+          <input
+            type="checkbox"
+            class="market-toggle"
+            data-target="${panelId}"
+            data-category="${category}"
+            ${adult ? "" : "checked"}
+          >
+          <span>${emoji} ${prettyName}</span>
+        `;
+        marketFilterBar.appendChild(label);
+
+        const panel = document.createElement("div");
+        panel.className = `market-subscreen${adult ? "" : " active"}`;
+        panel.id = panelId;
+
+        panel.innerHTML = `
+          ${adult ? `
+            <div class="adult-lock-box">
+              <div class="adult-lock-text">
+                <strong>Adult Sticker Vault</strong><br>
+                You unlocked this with full bakchod intent. Proceed carefully.
+              </div>
+            </div>
+          ` : ""}
+          <h3>${emoji} ${prettyName}</h3>
+          <div class="market-grid"></div>
+        `;
+
+        const grid = panel.querySelector(".market-grid");
+        renderCategory(files || [], grid, category);
+
+        marketPanelsWrap.appendChild(panel);
+      });
+
+      const toggles = document.querySelectorAll(".market-toggle");
+
+      toggles.forEach(toggle => {
+        toggle.addEventListener("change", () => {
+          const category = toggle.dataset.category || "";
+          const adult = isAdultCategory(category);
+
+          if (adult && toggle.checked && !adultAccessApproved) {
+            pendingAdultToggle = toggle;
+            adultDisclaimerOverlay.classList.add("show");
+            adultLockedMessage.style.display = "block";
+            return;
+          }
+
+          if (adult && !toggle.checked) {
+            updateMarketplacePanels();
+            return;
+          }
+
+          updateMarketplacePanels();
+        });
+      });
+
       updateMarketplacePanels();
     }
-  });
-});
 
-adultConfirmBtn.addEventListener("click", () => {
-  adultAccessApproved = true;
-  adultDisclaimerOverlay.classList.remove("show");
-  adultToggle.checked = true;
-  updateMarketplacePanels();
-});
+    async function loadStickers() {
+      try {
+        const res = await fetch("stickers.json");
+        const data = await res.json();
+        buildMarketplace(data);
+      } catch (err) {
+        marketPanelsWrap.innerHTML = `
+          <div class="adult-placeholder">
+            Failed to load sticker categories. Ministry blames network vibes.
+          </div>
+        `;
+        console.error("Failed to load stickers.json", err);
+      }
+    }
 
-adultCancelBtn.addEventListener("click", () => {
-  adultDisclaimerOverlay.classList.remove("show");
-  adultToggle.checked = false;
-  adultAccessApproved = false;
-  updateMarketplacePanels();
-});
+    adultConfirmBtn.addEventListener("click", () => {
+      adultAccessApproved = true;
+      adultDisclaimerOverlay.classList.remove("show");
 
-adultDisclaimerOverlay.addEventListener("click", (e) => {
-  if (e.target === adultDisclaimerOverlay) {
-    adultDisclaimerOverlay.classList.remove("show");
-    adultToggle.checked = false;
-    adultAccessApproved = false;
-    updateMarketplacePanels();
-  }
-});
+      if (pendingAdultToggle) {
+        pendingAdultToggle.checked = true;
+      }
 
-updateMarketplacePanels();
+      updateMarketplacePanels();
+      pendingAdultToggle = null;
+    });
 
+    adultCancelBtn.addEventListener("click", () => {
+      adultDisclaimerOverlay.classList.remove("show");
+
+      if (pendingAdultToggle) {
+        pendingAdultToggle.checked = false;
+      }
+
+      adultAccessApproved = false;
+      updateMarketplacePanels();
+      pendingAdultToggle = null;
+    });
+
+    adultDisclaimerOverlay.addEventListener("click", (e) => {
+      if (e.target === adultDisclaimerOverlay) {
+        adultDisclaimerOverlay.classList.remove("show");
+
+        if (pendingAdultToggle) {
+          pendingAdultToggle.checked = false;
+        }
+
+        adultAccessApproved = false;
+        updateMarketplacePanels();
+        pendingAdultToggle = null;
+      }
+    });
+
+    loadStickers();
   </script>
 </body>
 </html>
