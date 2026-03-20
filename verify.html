@@ -9,14 +9,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5440180307227003"
-     crossorigin="anonymous"></script>
-     <meta name="google-adsense-account" content="ca-pub-5440180307227003">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5440180307227003" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-5440180307227003">
+
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     :root {
       --paper: #fffdf8;
@@ -32,9 +31,7 @@
       --shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -88,29 +85,9 @@
       opacity: 0.45;
     }
 
-    .s1 {
-      width: 120px;
-      height: 120px;
-      top: 120px;
-      left: 28px;
-      background: rgba(125, 211, 252, 0.28);
-    }
-
-    .s2 {
-      width: 90px;
-      height: 90px;
-      top: 280px;
-      right: 44px;
-      background: rgba(255, 216, 77, 0.24);
-    }
-
-    .s3 {
-      width: 140px;
-      height: 140px;
-      bottom: 160px;
-      right: 120px;
-      background: rgba(134, 239, 172, 0.22);
-    }
+    .s1 { width: 120px; height: 120px; top: 120px; left: 28px; background: rgba(125, 211, 252, 0.28); }
+    .s2 { width: 90px; height: 90px; top: 280px; right: 44px; background: rgba(255, 216, 77, 0.24); }
+    .s3 { width: 140px; height: 140px; bottom: 160px; right: 120px; background: rgba(134, 239, 172, 0.22); }
 
     .page {
       max-width: 1120px;
@@ -168,6 +145,7 @@
       background: #fff1a8;
       color: #92400e;
       transform: rotate(-1deg);
+      display: none;
     }
 
     .rank-pill {
@@ -327,12 +305,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255,255,255,0.25) 45%,
-        transparent 80%
-      );
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 45%, transparent 80%);
       animation: progressShine 2.2s linear infinite;
     }
 
@@ -547,14 +520,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .gender-sub-wrap {
@@ -581,7 +548,8 @@
       box-shadow: 6px 6px 0 rgba(31,41,55,0.08);
     }
 
-    .gender-sub-preview img {
+    .gender-sub-preview img,
+    .q4-preview img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -612,13 +580,6 @@
       box-shadow: 6px 6px 0 rgba(31,41,55,0.08);
     }
 
-    .q4-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
     .submit-wrap {
       text-align: center;
       margin-top: 36px;
@@ -642,27 +603,18 @@
       letter-spacing: 0.8px;
     }
 
-    .submit-btn:hover {
-      transform: translateY(-2px) rotate(-1deg);
-    }
+    .submit-btn:hover { transform: translateY(-2px) rotate(-1deg); }
 
     .submit-btn::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255,255,255,0.25) 40%,
-        transparent 80%
-      );
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 40%, transparent 80%);
       transform: translateX(-120%);
       transition: transform 0.5s ease;
     }
 
-    .submit-btn:hover::after {
-      transform: translateX(120%);
-    }
+    .submit-btn:hover::after { transform: translateX(120%); }
 
     .submit-caption {
       margin-top: 10px;
@@ -716,55 +668,38 @@
       font-style: italic;
     }
 
+    .loading-box,
+    .error-box {
+      padding: 22px;
+      background: #fff;
+      border: 3px dashed rgba(31,41,55,0.18);
+      border-radius: 20px;
+      font-size: 22px;
+      color: #92400e;
+      margin-bottom: 20px;
+    }
+
+    @keyframes resultPop {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     @media (max-width: 900px) {
-      body {
-        padding: 16px;
-      }
-
-      .timer-bar {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 10px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .leader-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .pill {
-        min-width: 100%;
-      }
-
-      .gender-sub-preview,
-      .q4-preview {
+      body { padding: 16px; }
+      .timer-bar { grid-template-columns: 1fr; text-align: center; gap: 10px; }
+      .stats { grid-template-columns: 1fr; }
+      .leader-grid { grid-template-columns: 1fr; }
+      .pill { min-width: 100%; }
+      .gender-sub-preview, .q4-preview {
         width: 100%;
         max-width: 280px;
         flex-basis: 100%;
         margin-top: 6px;
       }
-
-      .question::before {
-        top: 14px;
-        bottom: 14px;
-      }
-
-      .hero h1 {
-        font-size: 42px;
-      }
-
-      .section-head {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .submit-btn {
-        width: 100%;
-        min-width: 0;
-      }
+      .question::before { top: 14px; bottom: 14px; }
+      .hero h1 { font-size: 42px; }
+      .section-head { flex-direction: column; align-items: flex-start; }
+      .submit-btn { width: 100%; min-width: 0; }
     }
   </style>
 </head>
@@ -779,8 +714,8 @@
         <div class="timer-title">Time Wasted on Verification</div>
         <div class="timer-main" id="verifyTimer">00:00:00</div>
       </div>
-      <div class="pill score-pill" id="liveScore" style="display: none">Funny Score: 0</div>
-      <div class="pill rank-pill" id="liveRank">Rank: Suspiciously Normal</div>
+      <div class="pill score-pill" id="liveScore">Funny Score: 0</div>
+      <div class="pill rank-pill" id="liveRank">Rank: Suspiciously Normal Human</div>
     </div>
 
     <div class="hero">
@@ -812,7 +747,7 @@
     <div class="progress-wrap">
       <div class="progress-row">
         <span>Verification Progress</span>
-        <span id="progressText">0 / 21 answered</span>
+        <span id="progressText">0 / 0 answered</span>
       </div>
       <div class="progress">
         <div class="progress-fill" id="progressFill"></div>
@@ -825,210 +760,8 @@
         <span>Answer honestly. Or entertainingly.</span>
       </div>
 
-      <div class="question" data-question>
-        <h3>Stage 1: Does your selected gender still match the earlier chosen one?</h3>
-        <div class="question-sub" id="genderMatchText"></div>
-
-        <label><input type="radio" name="gender_match" value="yes" required> Yes, obviously</label>
-        <label><input type="radio" name="gender_match" value="no"> No, the system misunderstood my aura</label>
-
-        <div id="genderSubQuestion" class="sub-question" style="display:none;">
-          <h4>Advanced Gender Verification</h4>
-          <div class="gender-sub-wrap">
-            <div class="gender-sub-options">
-              <p>Are you gay??</p>
-              <label><input type="radio" name="gender_sub" value="10"> True</label>
-              <label><input type="radio" name="gender_sub" value="10"> Also True</label>
-              <label><input type="radio" name="gender_sub" value="6"> Option A</label>
-              <label><input type="radio" name="gender_sub" value="6"> Option B</label>
-            </div>
-
-            <div class="gender-sub-preview" id="genderSubPreviewBox" style="display:none;">
-              <img id="genderSubPreviewImage" src="" alt="">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="question" data-question>
-        <h3>1. What phone do you use??</h3>
-        <div class="question-sub">Technology reveals character.</div>
-        <select name="q1" required>
-          <option value="">Select phone species</option>
-          <option value="2">iPhone</option>
-          <option value="3">Android</option>
-          <option value="9">Nokia brick of destiny</option>
-          <option value="7">Phone borrowed from cousin</option>
-          <option value="10">Pigeon messaging system</option>
-          <option value="8">No phone, only vibes</option>
-        </select>
-      </div>
-
-      <div class="question" data-question>
-        <h3>2. Do you like BTS or not??</h3>
-        <label><input type="radio" name="q2" value="4" required> Yes</label>
-        <label><input type="radio" name="q2" value="4"> No</label>
-        <label><input type="radio" name="q2" value="10"> Depends on moon phase</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>3. Who is greater leader?</h3>
-        <div class="question-sub">Choose with full geopolitical confidence.</div>
-        <div class="leader-grid">
-          <div class="leader-option">
-            <img src="images/obama.jpeg" alt="Barack Obama">
-            <label><input type="radio" name="q3" value="5" required> Barack Obama</label>
-          </div>
-          <div class="leader-option">
-            <img src="images/putin.jpg" alt="Vladimir Putin">
-            <label><input type="radio" name="q3" value="4"> Vladimir Putin</label>
-          </div>
-          <div class="leader-option">
-            <img src="images/erwin.jpg" alt="Commander Erwin">
-            <label><input type="radio" name="q3" value="10"> Commander Erwin</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="question" data-question>
-        <h3>4. Madara Uchiha is strongest one aside from Satoru Gojo, of course.</h3>
-        <div class="q4-wrap">
-          <div class="q4-options">
-            <label><input type="radio" name="q4" value="9" required> True</label>
-            <label><input type="radio" name="q4" value="3"> False</label>
-          </div>
-
-          <div class="q4-preview" id="q4PreviewBox" style="display:none;">
-            <img id="q4PreviewImage" src="" alt="">
-          </div>
-        </div>
-      </div>
-
-      <div class="question" data-question>
-        <h3>5. If in Upside Down Jon Snow fights Vecna, who wins??</h3>
-        <select name="q5" required>
-          <option value="">Choose wisely</option>
-          <option value="5">Jon Snow</option>
-          <option value="5">Vecna</option>
-          <option value="10">Whoever has plot armor</option>
-          <option value="8">The background music</option>
-        </select>
-      </div>
-
-      <div class="question" data-question>
-        <h3>6. Is Napoleon Nepali??</h3>
-        <label><input type="radio" name="q6" value="4" required> Yes</label>
-        <label><input type="radio" name="q6" value="3"> No</label>
-        <label><input type="radio" name="q6" value="10"> Emotionally, maybe</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>7. Are you being manipulated by Eren Yeager??</h3>
-        <label><input type="radio" name="q7" value="7" required> Yes</label>
-        <label><input type="radio" name="q7" value="3"> No</label>
-        <label><input type="radio" name="q7" value="10"> Since birth</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>8. Are you Eren Yeager??</h3>
-        <label><input type="radio" name="q8" value="7" required> Yes</label>
-        <label><input type="radio" name="q8" value="2"> No</label>
-        <label><input type="radio" name="q8" value="10"> Only during Rumbling hours</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>9. Why did Mikasa kill you??</h3>
-        <textarea name="q9" required placeholder="Write your tragic anime statement to the council"></textarea>
-      </div>
-
-      <div class="question" data-question>
-        <h3>10. Which one is more dangerous??</h3>
-        <label><input type="radio" name="q10" value="5" required> Public WiFi</label>
-        <label><input type="radio" name="q10" value="7"> Your ex</label>
-        <label><input type="radio" name="q10" value="10"> Both in collaboration</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>11. Have you ever said “I am fine” when you were clearly not fine??</h3>
-        <label><input type="radio" name="q11" value="5" required> Yes</label>
-        <label><input type="radio" name="q11" value="2"> No</label>
-        <label><input type="radio" name="q11" value="10"> Daily</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>12. How many hours a day do you spend overthinking??</h3>
-        <select name="q12" required>
-          <option value="">Select one</option>
-          <option value="1">0</option>
-          <option value="4">1-2</option>
-          <option value="7">3-5</option>
-          <option value="8">6-10</option>
-          <option value="10">24, premium overthinking membership</option>
-        </select>
-      </div>
-
-      <div class="question" data-question>
-        <h3>13. Which is more trustworthy??</h3>
-        <label><input type="radio" name="q13" value="10" required> A random cat</label>
-        <label><input type="radio" name="q13" value="1"> A politician</label>
-        <label><input type="radio" name="q13" value="8"> Neither</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>14. If Thanos snapped your attendance sheet, would you still be marked absent??</h3>
-        <label><input type="radio" name="q14" value="7" required> Yes</label>
-        <label><input type="radio" name="q14" value="3"> No</label>
-        <label><input type="radio" name="q14" value="10"> Worse, double absent</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>15. What is your favorite emergency response??</h3>
-        <select name="q15" required>
-          <option value="">Choose</option>
-          <option value="6">Panic</option>
-          <option value="8">Sleep</option>
-          <option value="5">Google it</option>
-          <option value="9">Ask anime protagonist</option>
-          <option value="10">Deny everything</option>
-        </select>
-      </div>
-
-      <div class="question" data-question>
-        <h3>16. Do you think pigeons are government drones??</h3>
-        <label><input type="radio" name="q16" value="8" required> Yes</label>
-        <label><input type="radio" name="q16" value="2"> No</label>
-        <label><input type="radio" name="q16" value="10"> They are consultants</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>17. Which one would you trust with your secrets??</h3>
-        <label><input type="radio" name="q17" value="9" required> Shrek</label>
-        <label><input type="radio" name="q17" value="3"> Light Yagami</label>
-        <label><input type="radio" name="q17" value="8"> Absolutely nobody</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>18. If tomato is a fruit, is ketchup a smoothie??</h3>
-        <label><input type="radio" name="q18" value="8" required> Yes</label>
-        <label><input type="radio" name="q18" value="3"> No</label>
-        <label><input type="radio" name="q18" value="10"> Forbidden smoothie</label>
-      </div>
-
-      <div class="question" data-question>
-        <h3>19. Which power would you choose??</h3>
-        <select name="q19" required>
-          <option value="">Select power</option>
-          <option value="7">Teleportation</option>
-          <option value="8">Mind reading</option>
-          <option value="6">Infinite money</option>
-          <option value="10">Ability to skip awkward conversations</option>
-          <option value="9">Instant Maggi creation</option>
-        </select>
-      </div>
-
-      <div class="question" data-question>
-        <h3>20. Final question: why should this website trust you??</h3>
-        <textarea name="q20" required placeholder="Defend yourself before the Ministry of Bakchodi"></textarea>
+      <div id="questionContainer">
+        <div class="loading-box">Loading Ministry-certified nonsense...</div>
       </div>
 
       <div class="submit-wrap">
@@ -1053,6 +786,8 @@
   </script>
 
   <script>
+    const YAML_URL = "questions.yaml";
+
     const name = localStorage.getItem("bc_name") || "Unknown Creature";
     const dob = localStorage.getItem("bc_dob") || "??/??/????";
     const gender = localStorage.getItem("bc_gender") || "Undefined";
@@ -1061,8 +796,6 @@
     document.getElementById("statName").textContent = name;
     document.getElementById("statDob").textContent = dob;
     document.getElementById("statGender").textContent = gender;
-    document.getElementById("genderMatchText").innerHTML =
-      `<strong>Earlier selected gender:</strong> ${gender}`;
 
     let verifySeconds = 0;
     const verifyTimerEl = document.getElementById("verifyTimer");
@@ -1072,18 +805,12 @@
     const progressFillEl = document.getElementById("progressFill");
     const verifyForm = document.getElementById("verifyForm");
     const resultBox = document.getElementById("resultBox");
-    const questionCards = document.querySelectorAll("[data-question]");
+    const questionContainer = document.getElementById("questionContainer");
 
-    const genderMatchInputs = document.querySelectorAll('input[name="gender_match"]');
-    const genderSubQuestion = document.getElementById("genderSubQuestion");
-
-    const q4Inputs = document.querySelectorAll('input[name="q4"]');
-    const q4PreviewImage = document.getElementById("q4PreviewImage");
-    const q4PreviewBox = document.getElementById("q4PreviewBox");
-
-    const genderSubInputs = document.querySelectorAll('input[name="gender_sub"]');
-    const genderSubPreviewBox = document.getElementById("genderSubPreviewBox");
-    const genderSubPreviewImage = document.getElementById("genderSubPreviewImage");
+    let config = null;
+    let selectedQuestions = [];
+    let visibleQuestionIds = [];
+    let questionMap = new Map();
 
     function formatTime(totalSeconds) {
       const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
@@ -1097,74 +824,14 @@
       verifyTimerEl.textContent = formatTime(verifySeconds);
     }, 1000);
 
-    function scoreTextAnswer(text) {
-      const value = text.trim().toLowerCase();
-      if (!value) return 0;
-
-      let score = 4;
-
-      if (value.length > 20) score += 2;
-      if (value.length > 60) score += 2;
-
-      const funnyWords = [
-        "eren", "mikasa", "gojo", "madara", "plot", "wifi", "cat",
-        "shrek", "rumbling", "government", "smoothie", "consultant",
-        "thanos", "anime", "maggi", "aura", "destiny", "moon", "vecna",
-        "jon snow", "bakchod", "council", "drama", "tragic"
-      ];
-
-      funnyWords.forEach(word => {
-        if (value.includes(word)) score += 1;
-      });
-
-      return Math.min(score, 10);
-    }
-
-    function calculateScore() {
-      let total = 0;
-      const fields = new FormData(verifyForm);
-
-      for (const [key, value] of fields.entries()) {
-        if (key === "q9" || key === "q20") {
-          total += scoreTextAnswer(value);
-        } else if (key === "gender_match") {
-          total += Number(value === "yes" ? 10 : 2);
-        } else if (key === "gender_sub") {
-          total += Number(value) || 0;
-        } else {
-          total += Number(value) || 0;
-        }
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
       }
-
-      return total;
+      return copy;
     }
-
-    function updateGenderSubPreview() {
-      const selected = document.querySelector('input[name="gender_sub"]:checked');
-
-      if (!selected) {
-        genderSubPreviewBox.style.display = "none";
-        genderSubPreviewImage.src = "";
-        genderSubPreviewImage.alt = "";
-        return;
-      }
-
-      const allGenderSubInputs = document.querySelectorAll('input[name="gender_sub"]');
-      const selectedIndex = Array.from(allGenderSubInputs).findIndex(input => input.checked);
-
-      genderSubPreviewBox.style.display = "block";
-      genderSubPreviewImage.src = "images/varys.jpg";
-      genderSubPreviewImage.alt = "Varys reference";
-
-      
-    }
-
-    genderSubInputs.forEach((input) => {
-      input.addEventListener("change", () => {
-        updateGenderSubPreview();
-        updateLiveStuff();
-      });
-    });
 
     function getFunnyRank(score) {
       if (score >= 180) return "Supreme Bakchod";
@@ -1175,89 +842,335 @@
       return "Suspiciously Normal Human";
     }
 
-    function updateProgress() {
-      let answered = 0;
+    function scoreTextAnswer(text, scoring) {
+      const value = (text || "").trim().toLowerCase();
+      if (!value) return 0;
 
-      const genderMatchSelected = document.querySelector('input[name="gender_match"]:checked');
-      const genderSubSelected = document.querySelector('input[name="gender_sub"]:checked');
+      const defaults = config.text_scoring_defaults;
+      const rules = scoring && scoring.use_default_funny_text ? defaults : defaults;
 
-      if (genderMatchSelected) answered++;
-      if (genderMatchSelected && genderMatchSelected.value === "no" && genderSubSelected) answered++;
+      let score = rules.base || 4;
 
-      for (let i = 1; i <= 20; i++) {
-        const qname = `q${i}`;
-        const field = verifyForm.elements[qname];
-        if (!field) continue;
+      if (value.length > 20) score += rules.bonuses?.gt20 || 0;
+      if (value.length > 60) score += rules.bonuses?.gt60 || 0;
 
-        if (field instanceof RadioNodeList) {
-          if (field.value) answered++;
-        } else if (field.tagName === "SELECT" || field.tagName === "TEXTAREA") {
-          if (field.value.trim() !== "") answered++;
+      (rules.keywords || []).forEach(word => {
+        if (value.includes(word)) score += 1;
+      });
+
+      return Math.min(score, rules.max_score || 10);
+    }
+
+    function createQuestionWrapper(question) {
+      const wrap = document.createElement("div");
+      wrap.className = "question";
+      wrap.dataset.questionId = question.id;
+      return wrap;
+    }
+
+     function getDisplayPrompt(question, displayIndex) {
+        const raw = question.prompt || "";
+        const cleaned = raw.replace(/^\s*\d+\.\s*/, "").trim();
+
+        if (question.id === "gender_match") {
+          return cleaned; // keep Stage 1 text as-is
         }
+
+        return `${displayIndex}. ${cleaned}`;
       }
 
-      const total = 21;
-      const percent = (answered / total) * 100;
-      progressTextEl.textContent = `${answered} / ${total} answered`;
-      progressFillEl.style.width = `${percent}%`;
+      function getRenderedQuestionOrder(questionId) {
+        const index = selectedQuestions.findIndex(q => q.id === questionId);
+        return index >= 0 ? index + 1 : 1;
+      }
+
+
+    function renderRadioOptions(question, groupName, options) {
+      return options.map(opt => `
+        <label>
+          <input type="radio" name="${groupName}" value="${opt.value}">
+          ${opt.label}
+        </label>
+      `).join("");
+    }
+
+    function renderConditionalRadio(question) {
+      const wrap = createQuestionWrapper(question);
+
+      let helper = "";
+      if (question.helper_from_storage?.key) {
+        const value = localStorage.getItem(question.helper_from_storage.key) || "Undefined";
+        helper = `<div class="question-sub"><strong>${question.helper_from_storage.label}:</strong> ${value}</div>`;
+      }
+
+      let childHtml = "";
+      const childId = question.options.find(o => o.reveal_child)?.reveal_child;
+      const childQuestion = childId ? questionMap.get(childId) : null;
+
+      if (childQuestion) {
+        childHtml = `
+          <div id="child-${childQuestion.id}" class="sub-question" style="display:none;">
+            <h4>${childQuestion.title || "Sub Question"}</h4>
+            <div class="gender-sub-wrap">
+              <div class="gender-sub-options">
+                <p>${childQuestion.subtitle || ""}</p>
+                ${renderRadioOptions(childQuestion, childQuestion.id, childQuestion.options)}
+              </div>
+              <div class="gender-sub-preview" id="preview-box-${childQuestion.id}" style="display:none;">
+                <img id="preview-img-${childQuestion.id}" src="" alt="">
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3>
+        ${helper}
+        ${renderRadioOptions(question, question.id, question.options)}
+        ${childHtml}
+      `;
+
+      return wrap;
+    }
+
+    function renderRadio(question) {
+      const wrap = createQuestionWrapper(question);
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3>
+        ${question.subtitle ? `<div class="question-sub">${question.subtitle}</div>` : ""}
+        ${renderRadioOptions(question, question.id, question.options)}
+      `;
+      return wrap;
+    }
+
+    function renderSelect(question) {
+      const wrap = createQuestionWrapper(question);
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3>
+        ${question.subtitle ? `<div class="question-sub">${question.subtitle}</div>` : ""}
+        <select name="${question.id}">
+          <option value="">${question.placeholder || "Choose"}</option>
+          ${question.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join("")}
+        </select>
+      `;
+      return wrap;
+    }
+
+    function renderTextarea(question) {
+      const isFinal = question.id === "q20_trust_site";
+      const wrap = createQuestionWrapper(question);
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}${isFinal ? " 🏁" : ""}</h3>
+        <textarea name="${question.id}" placeholder="${question.placeholder || ""}"></textarea>
+      `;
+      return wrap;
+    }
+
+    function renderImageRadioGrid(question) {
+      const wrap = createQuestionWrapper(question);
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3>
+        ${question.subtitle ? `<div class="question-sub">${question.subtitle}</div>` : ""}
+        <div class="leader-grid">
+          ${question.options.map(opt => `
+            <div class="leader-option">
+              <img src="${opt.image}" alt="${opt.label}">
+              <label>
+                <input type="radio" name="${question.id}" value="${opt.value}">
+                ${opt.label}
+              </label>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      return wrap;
+    }
+
+    function renderConditionalImageBool(question) {
+      const wrap = createQuestionWrapper(question);
+      wrap.innerHTML = `
+        <h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3>
+        <div class="q4-wrap">
+          <div class="q4-options">
+            ${renderRadioOptions(question, question.id, question.options)}
+          </div>
+          <div class="q4-preview" id="preview-box-${question.id}" style="display:none;">
+            <img id="preview-img-${question.id}" src="" alt="">
+          </div>
+        </div>
+      `;
+      return wrap;
+    }
+
+    function renderQuestion(question) {
+      switch (question.template) {
+        case "conditional_radio": return renderConditionalRadio(question);
+        case "radio": return renderRadio(question);
+        case "select": return renderSelect(question);
+        case "textarea": return renderTextarea(question);
+        case "image_radio_grid": return renderImageRadioGrid(question);
+        case "conditional_image_bool": return renderConditionalImageBool(question);
+        default: {
+          const wrap = createQuestionWrapper(question);
+          wrap.innerHTML = `<h3>${getDisplayPrompt(question, getRenderedQuestionOrder(question.id))}</h3><div class="error-box">Unsupported template: ${question.template}</div>`;
+          return wrap;
+        }
+      }
+    }
+
+    function collectVisibleQuestionIds() {
+      visibleQuestionIds = [];
+      selectedQuestions.forEach(question => {
+        if (question.hidden) return;
+
+        visibleQuestionIds.push(question.id);
+
+        const child = config.questions.find(q => q.parent_id === question.id);
+        if (child) {
+          const selected = document.querySelector(`input[name="${question.id}"]:checked`);
+          if (selected && child.show_if && selected.value === child.show_if.value) {
+            visibleQuestionIds.push(child.id);
+          }
+        }
+      });
+    }
+
+    function getOption(question, value) {
+      return (question.options || []).find(opt => String(opt.value) === String(value));
+    }
+
+    function calculateScore() {
+      let total = 0;
+
+      visibleQuestionIds.forEach(id => {
+        const q = questionMap.get(id);
+        if (!q) return;
+
+        if (q.template === "textarea") {
+          const field = verifyForm.elements[id];
+          total += scoreTextAnswer(field?.value || "", q.scoring);
+          return;
+        }
+
+        if (q.template === "select") {
+          const field = verifyForm.elements[id];
+          const selected = getOption(q, field?.value);
+          total += selected?.score || 0;
+          return;
+        }
+
+        const selected = document.querySelector(`input[name="${id}"]:checked`);
+        if (selected) {
+          const opt = getOption(q, selected.value);
+          total += opt?.score || 0;
+        }
+      });
+
+      return total;
     }
 
     function updateQuestionStates() {
-      questionCards.forEach((card) => {
-        const controls = card.querySelectorAll("input[type='radio'], select, textarea");
+      document.querySelectorAll("[data-question-id]").forEach(card => {
+        const qid = card.dataset.questionId;
+        const question = questionMap.get(qid);
+        if (!question) return;
+
         let complete = false;
 
-        controls.forEach((control) => {
-          if (control.type === "radio") {
-            const group = verifyForm.querySelector(`input[name="${control.name}"]:checked`);
-            if (group) complete = true;
-          } else if (control.value.trim() !== "") {
-            complete = true;
-          }
-        });
+        if (question.template === "textarea" || question.template === "select") {
+          const field = verifyForm.elements[qid];
+          complete = !!field && String(field.value || "").trim() !== "";
+        } else {
+          complete = !!document.querySelector(`input[name="${qid}"]:checked`);
+        }
 
         card.classList.toggle("done", complete);
       });
     }
 
-    function updateGenderSubQuestion() {
-      const selected = document.querySelector('input[name="gender_match"]:checked');
+    function updateProgress() {
+      collectVisibleQuestionIds();
 
-      if (selected && selected.value === "no") {
-        genderSubQuestion.style.display = "block";
-      } else {
-        genderSubQuestion.style.display = "none";
-        const subInputs = document.querySelectorAll('input[name="gender_sub"]');
-        subInputs.forEach(input => input.checked = false);
+      let answered = 0;
+      visibleQuestionIds.forEach(id => {
+        const question = questionMap.get(id);
+        if (!question) return;
 
-        genderSubPreviewBox.style.display = "none";
-        genderSubPreviewImage.src = "";
-        genderSubPreviewImage.alt = "";
-      }
+        if (question.template === "textarea" || question.template === "select") {
+          const field = verifyForm.elements[id];
+          if (field && String(field.value || "").trim() !== "") answered++;
+        } else {
+          if (document.querySelector(`input[name="${id}"]:checked`)) answered++;
+        }
+      });
+
+      const total = visibleQuestionIds.length || 1;
+      const percent = (answered / total) * 100;
+      progressTextEl.textContent = `${answered} / ${total} answered`;
+      progressFillEl.style.width = `${percent}%`;
     }
 
-    function updateQ4Preview() {
-      const selected = document.querySelector('input[name="q4"]:checked');
+    function updateConditionalViews() {
+      selectedQuestions.forEach(question => {
+        if (question.template === "conditional_radio") {
+          const child = config.questions.find(q => q.parent_id === question.id);
+          if (child) {
+            const selected = document.querySelector(`input[name="${question.id}"]:checked`);
+            const childBox = document.getElementById(`child-${child.id}`);
+            const previewBox = document.getElementById(`preview-box-${child.id}`);
+            const previewImg = document.getElementById(`preview-img-${child.id}`);
 
-      if (!selected) {
-        q4PreviewBox.style.display = "none";
-        q4PreviewImage.src = "";
-        q4PreviewImage.alt = "";
-        return;
-      }
+            if (selected && child.show_if && selected.value === child.show_if.value) {
+              childBox.style.display = "block";
+            } else {
+              childBox.style.display = "none";
+              document.querySelectorAll(`input[name="${child.id}"]`).forEach(i => i.checked = false);
+              if (previewBox && previewImg) {
+                previewBox.style.display = "none";
+                previewImg.src = "";
+                previewImg.alt = "";
+              }
+            }
 
-      q4PreviewBox.style.display = "block";
+            const childSelected = document.querySelector(`input[name="${child.id}"]:checked`);
+            if (childSelected && child.image_preview?.url) {
+              previewBox.style.display = "block";
+              previewImg.src = child.image_preview.url;
+              previewImg.alt = child.image_preview.alt || "";
+            } else if (previewBox && previewImg) {
+              previewBox.style.display = "none";
+              previewImg.src = "";
+              previewImg.alt = "";
+            }
+          }
+        }
 
-      if (selected.value === "3") {
-        q4PreviewImage.src = "images/gojo.gif";
-        q4PreviewImage.alt = "Gojo gif preview";
-      } else {
-        q4PreviewImage.src = "images/madara.jpg";
-        q4PreviewImage.alt = "Madara preview";
-      }
+        if (question.template === "conditional_image_bool") {
+          const selected = document.querySelector(`input[name="${question.id}"]:checked`);
+          const previewBox = document.getElementById(`preview-box-${question.id}`);
+          const previewImg = document.getElementById(`preview-img-${question.id}`);
+
+          if (!previewBox || !previewImg) return;
+
+          if (!selected) {
+            previewBox.style.display = "none";
+            previewImg.src = "";
+            previewImg.alt = "";
+          } else {
+            const opt = getOption(question, selected.value);
+            if (opt?.image?.url) {
+              previewBox.style.display = "block";
+              previewImg.src = opt.image.url;
+              previewImg.alt = opt.image.alt || "";
+            }
+          }
+        }
+      });
     }
 
     function updateLiveStuff() {
+      updateConditionalViews();
       const totalScore = calculateScore();
       const rank = getFunnyRank(totalScore);
       liveScoreEl.textContent = `Funny Score: ${totalScore}`;
@@ -1266,46 +1179,89 @@
       updateQuestionStates();
     }
 
-    genderMatchInputs.forEach(input => {
-      input.addEventListener("change", () => {
-        updateGenderSubQuestion();
-        updateLiveStuff();
-      });
-    });
+    function validateVisibleQuestions() {
+      collectVisibleQuestionIds();
 
-    q4Inputs.forEach((input) => {
-      input.addEventListener("change", () => {
-        updateQ4Preview();
-        updateLiveStuff();
-      });
-    });
+      for (const id of visibleQuestionIds) {
+        const question = questionMap.get(id);
+        if (!question) continue;
 
-    verifyForm.addEventListener("change", updateLiveStuff);
-    verifyForm.addEventListener("input", updateLiveStuff);
+        if (question.template === "textarea" || question.template === "select") {
+          const field = verifyForm.elements[id];
+          if (!field || String(field.value || "").trim() === "") {
+            alert("Please answer all visible questions before submitting.");
+            return false;
+          }
+        } else {
+          const checked = document.querySelector(`input[name="${id}"]:checked`);
+          if (!checked) {
+            alert("Please answer all visible questions before submitting.");
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function pickQuestions() {
+      const FINAL_Q_ID = "q20_trust_site";
+
+      const mandatory = config.questions.filter(q => q.mandatory);
+
+      const pool = config.questions.filter(q =>
+        !q.mandatory &&
+        !q.hidden &&
+        !q.parent_id &&
+        q.id !== FINAL_Q_ID
+      );
+
+      const count = Math.min(
+        (config.meta?.random_question_count || pool.length) - 1,
+        pool.length
+      );
+
+      const randomPicked = shuffle(pool).slice(0, count);
+
+      const finalQuestion = config.questions.find(q => q.id === FINAL_Q_ID);
+
+      selectedQuestions = [
+        ...mandatory,
+        ...randomPicked,
+        finalQuestion // ALWAYS LAST
+      ];
+    }
+
+    async function loadYamlQuestions() {
+      try {
+        const res = await fetch(YAML_URL, { cache: "no-store" });
+        const text = await res.text();
+        config = jsyaml.load(text);
+
+        questionMap = new Map();
+        config.questions.forEach(q => questionMap.set(q.id, q));
+
+        pickQuestions();
+
+        questionContainer.innerHTML = "";
+        selectedQuestions.forEach(q => {
+          questionContainer.appendChild(renderQuestion(q));
+        });
+
+        verifyForm.addEventListener("change", updateLiveStuff);
+        verifyForm.addEventListener("input", updateLiveStuff);
+
+        updateLiveStuff();
+      } catch (err) {
+        console.error(err);
+        questionContainer.innerHTML = `<div class="error-box">Failed to load questions.yaml</div>`;
+      }
+    }
 
     verifyForm.addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const genderMatch = document.querySelector('input[name="gender_match"]:checked');
-      if (!genderMatch) {
-        alert("Please answer the first verification stage.");
-        return;
-      }
-
-      const genderSubSelected = document.querySelector('input[name="gender_sub"]:checked');
-
-      if (genderMatch.value === "no" && !genderSubSelected) {
-        alert("Please complete the advanced gender verification.");
-        return;
-      }
-
-      const q9 = verifyForm.elements["q9"].value.trim();
-      const q20 = verifyForm.elements["q20"].value.trim();
-
-      if (!q9 || !q20) {
-        alert("Please answer all dramatic text questions.");
-        return;
-      }
+      if (!validateVisibleQuestions()) return;
 
       const totalScore = calculateScore();
       const rank = getFunnyRank(totalScore);
@@ -1329,22 +1285,19 @@
         </div>
       `;
 
-      document.getElementById("visitHomeBtn").addEventListener("click", () => {
-        window.location.href = "home.html";
-      });
-
       localStorage.setItem("bc_verified", "yes");
       localStorage.setItem("bc_verify_time_wasted", formatTime(verifySeconds));
       localStorage.setItem("bc_funny_score", totalScore);
       localStorage.setItem("bc_funny_rank", rank);
 
+      document.getElementById("visitHomeBtn").addEventListener("click", () => {
+        window.location.href = "home.html";
+      });
+
       resultBox.scrollIntoView({ behavior: "smooth" });
     });
 
-    updateGenderSubQuestion();
-    updateGenderSubPreview();
-    updateQ4Preview();
-    updateLiveStuff();
+    loadYamlQuestions();
   </script>
 </body>
 </html>

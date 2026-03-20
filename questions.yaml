@@ -1,0 +1,389 @@
+meta:
+  version: 1
+  title: "Backchod Identity Verification"
+  random_question_count: 20
+  base_url: "https://backchod.com"
+
+text_scoring_defaults:
+  base: 4
+  bonuses:
+    gt20: 2
+    gt60: 2
+  keywords:
+    - eren
+    - mikasa
+    - gojo
+    - madara
+    - plot
+    - wifi
+    - cat
+    - shrek
+    - rumbling
+    - government
+    - smoothie
+    - consultant
+    - thanos
+    - anime
+    - maggi
+    - aura
+    - destiny
+    - moon
+    - vecna
+    - jon snow
+    - bakchod
+    - council
+    - drama
+    - tragic
+  max_score: 10
+
+questions:
+  - id: gender_match
+    template: conditional_radio
+    mandatory: true
+    prompt: "Stage 1: Does your selected gender still match the earlier chosen one?"
+    helper_from_storage:
+      key: "bc_gender"
+      label: "Earlier selected gender"
+    options:
+      - label: "Yes, obviously"
+        value: "yes"
+        score: 10
+      - label: "No, the system misunderstood my aura"
+        value: "no"
+        score: 2
+        reveal_child: "gender_sub"
+
+  - id: gender_sub
+    template: sub_radio
+    hidden: true
+    parent_id: "gender_match"
+    show_if:
+      value: "no"
+    title: "Advanced Gender Verification"
+    subtitle: "Are you gay??"
+    image_preview:
+      mode: "any_selected"
+      url: "https://backchod.com/images/varys.jpg"
+      alt: "Varys reference"
+    options:
+      - label: "True"
+        value: "true_1"
+        score: 10
+      - label: "Also True"
+        value: "true_2"
+        score: 10
+      - label: "Option A"
+        value: "option_a"
+        score: 6
+      - label: "Option B"
+        value: "option_b"
+        score: 6
+
+  - id: q1_phone
+    template: select
+    prompt: "1. What phone do you use??"
+    subtitle: "Technology reveals character."
+    placeholder: "Select phone species"
+    options:
+      - label: "iPhone"
+        value: "iphone"
+        score: 2
+      - label: "Android"
+        value: "android"
+        score: 3
+      - label: "Nokia brick of destiny"
+        value: "nokia"
+        score: 9
+      - label: "Phone borrowed from cousin"
+        value: "borrowed"
+        score: 7
+      - label: "Pigeon messaging system"
+        value: "pigeon"
+        score: 10
+      - label: "No phone, only vibes"
+        value: "vibes"
+        score: 8
+
+  - id: q2_bts
+    template: radio
+    prompt: "2. Do you like BTS or not??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 4
+      - label: "No"
+        value: "no"
+        score: 4
+      - label: "Depends on moon phase"
+        value: "moon"
+        score: 10
+
+  - id: q3_leader
+    template: image_radio_grid
+    prompt: "3. Who is greater leader?"
+    subtitle: "Choose with full geopolitical confidence."
+    options:
+      - label: "Barack Obama"
+        value: "obama"
+        score: 5
+        image: "https://backchod.com/images/obama.jpeg"
+      - label: "Vladimir Putin"
+        value: "putin"
+        score: 4
+        image: "https://backchod.com/images/putin.jpg"
+      - label: "Commander Erwin"
+        value: "erwin"
+        score: 10
+        image: "https://backchod.com/images/erwin.jpg"
+
+  - id: q4_madara
+    template: conditional_image_bool
+    prompt: "4. Madara Uchiha is strongest one aside from Satoru Gojo, of course."
+    options:
+      - label: "True"
+        value: "true"
+        score: 9
+        image:
+          url: "https://backchod.com/images/madara.jpg"
+          alt: "Madara preview"
+      - label: "False"
+        value: "false"
+        score: 3
+        image:
+          url: "https://backchod.com/images/gojo.gif"
+          alt: "Gojo gif preview"
+
+  - id: q5_vecna
+    template: select
+    prompt: "5. If in Upside Down Jon Snow fights Vecna, who wins??"
+    placeholder: "Choose wisely"
+    options:
+      - label: "Jon Snow"
+        value: "jon"
+        score: 5
+      - label: "Vecna"
+        value: "vecna"
+        score: 5
+      - label: "Whoever has plot armor"
+        value: "plot_armor"
+        score: 10
+      - label: "The background music"
+        value: "music"
+        score: 8
+
+  - id: q6_napoleon
+    template: radio
+    prompt: "6. Is Napoleon Nepali??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 4
+      - label: "No"
+        value: "no"
+        score: 3
+      - label: "Emotionally, maybe"
+        value: "emotionally"
+        score: 10
+
+  - id: q7_eren_manipulated
+    template: radio
+    prompt: "7. Are you being manipulated by Eren Yeager??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 7
+      - label: "No"
+        value: "no"
+        score: 3
+      - label: "Since birth"
+        value: "since_birth"
+        score: 10
+
+  - id: q8_are_you_eren
+    template: radio
+    prompt: "8. Are you Eren Yeager??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 7
+      - label: "No"
+        value: "no"
+        score: 2
+      - label: "Only during Rumbling hours"
+        value: "rumbling"
+        score: 10
+
+  - id: q9_mikasa
+    template: textarea
+    prompt: "9. Why did Mikasa kill you??"
+    placeholder: "Write your tragic anime statement to the council"
+    scoring:
+      use_default_funny_text: true
+
+  - id: q10_dangerous
+    template: radio
+    prompt: "10. Which one is more dangerous??"
+    options:
+      - label: "Public WiFi"
+        value: "wifi"
+        score: 5
+      - label: "Your ex"
+        value: "ex"
+        score: 7
+      - label: "Both in collaboration"
+        value: "both"
+        score: 10
+
+  - id: q11_fine
+    template: radio
+    prompt: "11. Have you ever said “I am fine” when you were clearly not fine??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 5
+      - label: "No"
+        value: "no"
+        score: 2
+      - label: "Daily"
+        value: "daily"
+        score: 10
+
+  - id: q12_overthinking
+    template: select
+    prompt: "12. How many hours a day do you spend overthinking??"
+    placeholder: "Select one"
+    options:
+      - label: "0"
+        value: "0"
+        score: 1
+      - label: "1-2"
+        value: "1_2"
+        score: 4
+      - label: "3-5"
+        value: "3_5"
+        score: 7
+      - label: "6-10"
+        value: "6_10"
+        score: 8
+      - label: "24, premium overthinking membership"
+        value: "24"
+        score: 10
+
+  - id: q13_trustworthy
+    template: radio
+    prompt: "13. Which is more trustworthy??"
+    options:
+      - label: "A random cat"
+        value: "cat"
+        score: 10
+      - label: "A politician"
+        value: "politician"
+        score: 1
+      - label: "Neither"
+        value: "neither"
+        score: 8
+
+  - id: q14_attendance
+    template: radio
+    prompt: "14. If Thanos snapped your attendance sheet, would you still be marked absent??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 7
+      - label: "No"
+        value: "no"
+        score: 3
+      - label: "Worse, double absent"
+        value: "double_absent"
+        score: 10
+
+  - id: q15_emergency
+    template: select
+    prompt: "15. What is your favorite emergency response??"
+    placeholder: "Choose"
+    options:
+      - label: "Panic"
+        value: "panic"
+        score: 6
+      - label: "Sleep"
+        value: "sleep"
+        score: 8
+      - label: "Google it"
+        value: "google"
+        score: 5
+      - label: "Ask anime protagonist"
+        value: "anime"
+        score: 9
+      - label: "Deny everything"
+        value: "deny"
+        score: 10
+
+  - id: q16_pigeons
+    template: radio
+    prompt: "16. Do you think pigeons are government drones??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 8
+      - label: "No"
+        value: "no"
+        score: 2
+      - label: "They are consultants"
+        value: "consultants"
+        score: 10
+
+  - id: q17_secrets
+    template: radio
+    prompt: "17. Which one would you trust with your secrets??"
+    options:
+      - label: "Shrek"
+        value: "shrek"
+        score: 9
+      - label: "Light Yagami"
+        value: "light"
+        score: 3
+      - label: "Absolutely nobody"
+        value: "nobody"
+        score: 8
+
+  - id: q18_ketchup
+    template: radio
+    prompt: "18. If tomato is a fruit, is ketchup a smoothie??"
+    options:
+      - label: "Yes"
+        value: "yes"
+        score: 8
+      - label: "No"
+        value: "no"
+        score: 3
+      - label: "Forbidden smoothie"
+        value: "forbidden"
+        score: 10
+
+  - id: q19_power
+    template: select
+    prompt: "19. Which power would you choose??"
+    placeholder: "Select power"
+    options:
+      - label: "Teleportation"
+        value: "teleportation"
+        score: 7
+      - label: "Mind reading"
+        value: "mind_reading"
+        score: 8
+      - label: "Infinite money"
+        value: "money"
+        score: 6
+      - label: "Ability to skip awkward conversations"
+        value: "awkward"
+        score: 10
+      - label: "Instant Maggi creation"
+        value: "maggi"
+        score: 9
+
+  - id: q20_trust_site
+    template: textarea
+    prompt: "20. Final question: why should this website trust you??"
+    placeholder: "Defend yourself before the Ministry of Bakchodi"
+    scoring:
+      use_default_funny_text: true
