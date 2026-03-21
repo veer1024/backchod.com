@@ -1,0 +1,52 @@
+{
+  "name": "Level 2",
+  "spawnXFactor": 0.06,
+  "flagXFactor": 0.92,
+  "holes": [],
+  "blocks": [
+    {
+      "xFactor": 0.2,
+      "w": 92,
+      "h": 70
+    },
+    {
+      "xFactor": 0.43,
+      "w": 92,
+      "h": 70
+    },
+    {
+      "xFactor": 0.67,
+      "w": 92,
+      "h": 70
+    }
+  ],
+  "blockTrap": {
+    "blockIndex": 1,
+    "delayFrames": 10,
+    "targetW": 52,
+    "slideDx": 120
+  },
+  "roofSpikeBands": [
+    {
+      "xFactor": 0.22,
+      "w": 42,
+      "maxH": 110,
+      "bandStartFactor": 0.19,
+      "bandEndFactor": 0.28
+    },
+    {
+      "xFactor": 0.45,
+      "w": 42,
+      "maxH": 110,
+      "bandStartFactor": 0.42,
+      "bandEndFactor": 0.51
+    },
+    {
+      "xFactor": 0.69,
+      "w": 42,
+      "maxH": 110,
+      "bandStartFactor": 0.66,
+      "bandEndFactor": 0.75
+    }
+  ]
+}

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backchod Splotch</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#2f9ca3;font-family:Arial,sans-serif}
+    canvas{display:block;width:100vw;height:100vh;background:#2f9ca3}
+    #msg{position:fixed;left:12px;top:12px;padding:10px 12px;background:rgba(0,0,0,.18);color:#fff;font-size:18px;z-index:10}
+    #error{position:fixed;left:12px;top:58px;max-width:720px;padding:10px 12px;background:rgba(120,0,0,.85);color:#fff;font-size:16px;z-index:10;display:none;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+<div id="msg">Loading...</div>
+<div id="error"></div>
+<canvas id="game" width="1365" height="690"></canvas>
+<script>
+(async function () {
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const msg = document.getElementById('msg');
+  const err = document.getElementById('error');
+
+  const W = 1365, H = 690;
+  canvas.width = W; canvas.height = H;
+
+  const room = { x:(W - 1140)/2, y:92, w:1140, h:245 };
+  const floorBottomY = room.y + room.h;
+  const floorH = 10;
+  const floorTopY = floorBottomY - floorH;
+  const holeDepth = 230;
+
+  const playerImg = new Image(); playerImg.src = 'assets/images/player.png';
+  const spikeImg = new Image(); spikeImg.src = 'assets/images/spike.png';
+  const flagImg  = new Image(); flagImg.src  = 'assets/images/flag.png';
+
+  const keys = { left:false, right:false, jump:false, restart:false };
+  window.addEventListener('keydown', (e) => {
+    const c = e.code || e.key;
+    if (c==='ArrowLeft'||c==='KeyA') keys.left = true;
+    if (c==='ArrowRight'||c==='KeyD') keys.right = true;
+    if (c==='ArrowUp'||c==='Space') keys.jump = true;
+    if (c==='KeyR') keys.restart = true;
+    if (['ArrowLeft','ArrowRight','ArrowUp','Space','KeyA','KeyD','KeyR'].includes(c)) e.preventDefault();
+  }, {passive:false});
+  window.addEventListener('keyup', (e) => {
+    const c = e.code || e.key;
+    if (c==='ArrowLeft'||c==='KeyA') keys.left = false;
+    if (c==='ArrowRight'||c==='KeyD') keys.right = false;
+    if (c==='ArrowUp'||c==='Space') keys.jump = false;
+    if (c==='KeyR') keys.restart = false;
+  }, {passive:false});
+
+  function pxFactor(f){ return room.x + room.w * f; }
+  function feetY(){ return player.y + player.h; }
+  function centerX(){ return player.x + player.w/2; }
+  function rectsOverlap(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
+  function showError(text){ err.style.display = 'block'; err.textContent = String(text); console.error(text); }
+
+  function drawRepeatedSpikes(x,y,w,h,upsideDown=false){
+    const count = Math.max(1, Math.floor(w/28));
+    for(let i=0;i<count;i++){
+      const dx = x + i*(w/count);
+      if (spikeImg.complete && spikeImg.naturalWidth > 0) {
+        ctx.save();
+        if (upsideDown) {
+          ctx.translate(dx + (w/count)/2, y+h);
+          ctx.scale(1, -1);
+          ctx.drawImage(spikeImg, -(w/count)/2, 0, w/count, h);
+        } else {
+          ctx.drawImage(spikeImg, dx, y, w/count, h);
+        }
+        ctx.restore();
+      } else {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(dx, y, w/count, h);
+      }
+    }
+  }
+
+  let player = null;
+  function resetPlayer(spawnX){
+    player = {
+      w:18,h:24,
+      x:spawnX - 9,
+      y:floorTopY - 24,
+      vx:0,vy:0,
+      flip:false,
+      jumpLock:false,
+      dead:false,
+      deathTimer:0,
+      onSurface:null
+    };
+  }
+
+  function drawPlayer(){
+    if (!player) return;
+    if (playerImg.complete && playerImg.naturalWidth > 0) {
+      const drawX = player.x - 6, drawY = player.y - 28, dw = 30, dh = 52;
+      ctx.save();
+      if (player.flip) {
+        ctx.translate(drawX + dw/2, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(playerImg, 219, 80, 228, 397, -dw/2, drawY, dw, dh);
+      } else {
+        ctx.drawImage(playerImg, 219, 80, 228, 397, drawX, drawY, dw, dh);
+      }
+      ctx.restore();
+    } else {
+      ctx.fillStyle = '#7a31ff';
+      ctx.fillRect(player.x, player.y - 28, 30, 52);
+    }
+  }
+
+  function killPlayer(){
+    if (!player || player.dead || levelComplete) return;
+    player.dead = true;
+    player.deathTimer = 34;
+    player.vx = 0;
+    player.vy = 7;
+  }
+
+  function completeLevel(){
+    if (levelComplete) return;
+    levelComplete = true;
+    levelTimer = 75;
+  }
+
+  function makeGroundSpikeBand(cfg){
+    return {
+      kind:'groundSpikeBand',
+      x: pxFactor(cfg.xFactor), y: floorTopY - 26, w: cfg.w, h: 26,
+      bandStart: pxFactor(cfg.bandStartFactor), bandEnd: pxFactor(cfg.bandEndFactor),
+      active:false,
+      reset(){ this.active = false; },
+      update(){ const cx = centerX(); this.active = cx >= this.bandStart && cx <= this.bandEnd; },
+      hitboxes(){ return this.active ? [{x:this.x,y:this.y,w:this.w,h:this.h}] : []; },
+      surfaces(){ return []; },
+      holeRects(){ return []; },
+      armIfStandingOn(){},
+      draw(){ if (this.active) drawRepeatedSpikes(this.x, this.y, this.w, this.h, false); }
+    };
+  }
+
+  function makeRoofSpikeBand(cfg){
+    return {
+      kind:'roofSpikeBand',
+      x: pxFactor(cfg.xFactor), y: room.y, w: cfg.w || 42, h:0, maxH: cfg.maxH || 120,
+      bandStart: pxFactor(cfg.bandStartFactor), bandEnd: pxFactor(cfg.bandEndFactor),
+      active:false,
+      reset(){ this.h = 0; this.active = false; },
+      update(){
+        const cx = centerX();
+        this.active = cx >= this.bandStart && cx <= this.bandEnd;
+        if (this.active && this.h < this.maxH) this.h += 8;
+        if (!this.active && this.h > 0) this.h -= 8;
+        if (this.h < 0) this.h = 0;
+      },
+      hitboxes(){ return this.h > 0 ? [{x:this.x,y:this.y,w:this.w,h:this.h}] : []; },
+      surfaces(){ return []; },
+      holeRects(){ return []; },
+      armIfStandingOn(){},
+      draw(){ if (this.h > 0) drawRepeatedSpikes(this.x, this.y, this.w, this.h, true); }
+    };
+  }
+
+  function makeFloorTrap(cfg){
+    const homeX = pxFactor(cfg.xFactor);
+    const targetX = pxFactor(cfg.targetXFactor);
+    return {
+      kind:'floorTrap',
+      x: homeX, y: floorTopY, w: cfg.w, h: floorH,
+      homeX, homeW: cfg.w, targetX, targetW: cfg.targetW,
+      delayFrames: cfg.delayFrames || 10, state:'idle', timer:0,
+      reset(){ this.x = this.homeX; this.w = this.homeW; this.state = 'idle'; this.timer = 0; },
+      update(){
+        if (this.state === 'armed') {
+          this.timer--;
+          if (this.timer <= 0) this.state = 'active';
+        } else if (this.state === 'active') {
+          if (this.w > this.targetW) {
+            this.x += 2;
+            this.w -= 4;
+            if (this.w < this.targetW) this.w = this.targetW;
+          }
+          if (this.x < this.targetX) {
+            this.x += 4;
+            if (this.x > this.targetX) this.x = this.targetX;
+          }
+          if (this.w === this.targetW && this.x === this.targetX) this.state = 'done';
+        }
+      },
+      armIfStandingOn(){
+        if (this.state !== 'idle' || !player) return;
+        const horizontal = player.x + player.w > this.x && player.x < this.x + this.w;
+        const onTop = Math.abs(feetY() - this.y) <= 2;
+        if (horizontal && onTop) { this.state = 'armed'; this.timer = this.delayFrames; }
+      },
+      hitboxes(){ return []; },
+      surfaces(){ return this.w > 8 ? [{x:this.x,y:this.y,w:this.w,h:this.h,ref:this}] : []; },
+      holeRects(){
+        const rects = [];
+        const homeL = this.homeX, homeR = this.homeX + this.homeW;
+        const curL = this.x, curR = this.x + this.w;
+        if (curL > homeL) rects.push({x:homeL, y:floorTopY, w:curL-homeL, h:holeDepth});
+        if (curR < homeR) rects.push({x:curR, y:floorTopY, w:homeR-curR, h:holeDepth});
+        return rects.filter(r => r.w > 1);
+      },
+      draw(){ if (this.w > 8) { ctx.fillStyle = '#4aa8b2'; ctx.fillRect(this.x, this.y, this.w, this.h); } }
+    };
+  }
+
+  function makeBlock(cfg){
+    const x = pxFactor(cfg.xFactor);
+    return {
+      kind:'block',
+      x, y: floorTopY - (cfg.h || 70), w: cfg.w || 92, h: cfg.h || 70,
+      reset(){}, update(){}, armIfStandingOn(){},
+      hitboxes(){ return []; },
+      surfaces(){ return [{x:this.x,y:this.y,w:this.w,h:10,ref:this}] },
+      holeRects(){ return []; },
+      draw(){ ctx.fillStyle='#4aa8b2'; ctx.fillRect(this.x, this.y, this.w, this.h); }
+    };
+  }
+
+  function makeMovingBlockTrap(blockCfg, trapCfg){
+    const b = makeBlock(blockCfg);
+    return {
+      kind:'movingBlockTrap',
+      x:b.x, y:b.y, w:b.w, h:b.h,
+      homeX:b.x, homeW:b.w,
+      targetW: trapCfg.targetW || 52,
+      targetX: b.x + (trapCfg.slideDx || 120),
+      delayFrames: trapCfg.delayFrames || 10,
+      state:'idle', timer:0,
+      reset(){ this.x = this.homeX; this.w = this.homeW; this.state = 'idle'; this.timer = 0; },
+      update(){
+        if (this.state === 'armed') {
+          this.timer--;
+          if (this.timer <= 0) this.state = 'active';
+        } else if (this.state === 'active') {
+          if (this.w > this.targetW) {
+            this.x += 2;
+            this.w -= 4;
+            if (this.w < this.targetW) this.w = this.targetW;
+          }
+          if (this.x < this.targetX) {
+            this.x += 5;
+            if (this.x > this.targetX) this.x = this.targetX;
+          }
+          if (this.w === this.targetW && this.x === this.targetX) this.state = 'done';
+        }
+      },
+      armIfStandingOn(){
+        if (this.state !== 'idle' || !player) return;
+        const horizontal = player.x + player.w > this.x && player.x < this.x + this.w;
+        const onTop = Math.abs(feetY() - this.y) <= 2;
+        if (horizontal && onTop) { this.state = 'armed'; this.timer = this.delayFrames; }
+      },
+      hitboxes(){ return []; },
+      surfaces(){ return this.w > 8 ? [{x:this.x,y:this.y,w:this.w,h:10,ref:this}] : []; },
+      holeRects(){
+        const rects = [];
+        const homeL = this.homeX, homeR = this.homeX + this.homeW;
+        const curL = this.x, curR = this.x + this.w;
+        if (curL > homeL) rects.push({x:homeL, y:this.y, w:curL-homeL, h:floorTopY-this.y+holeDepth});
+        if (curR < homeR) rects.push({x:curR, y:this.y, w:homeR-curR, h:floorTopY-this.y+holeDepth});
+        return rects.filter(r => r.w > 1);
+      },
+      draw(){ if (this.w > 8) { ctx.fillStyle='#4aa8b2'; ctx.fillRect(this.x, this.y, this.w, floorTopY - this.y + floorH); } }
+    };
+  }
+
+  function makeMountainModule(cfg, spikeCfg){
+    return {
+      kind:'mountain',
+      baseX: pxFactor(cfg.baseXFactor), baseW: cfg.baseW, height: cfg.height,
+      movedX: 0, slideDistance: cfg.slideDistance || 150, moving:false,
+      spike: { x:pxFactor(spikeCfg.xFactor), y:room.y, w:spikeCfg.w || 44, h:0, maxH: spikeCfg.maxH || 125, triggerX:pxFactor(spikeCfg.triggerFactor), activated:false, touched:false },
+      reset(){ this.movedX=0; this.moving=false; this.spike.h=0; this.spike.activated=false; this.spike.touched=false; },
+      surfaceYAt(x){
+        const sx=this.baseX + this.movedX, ex=sx+this.baseW;
+        if (x < sx || x > ex) return null;
+        const t=(x-sx)/this.baseW;
+        return floorTopY - this.height * (1 - Math.abs(2*t - 1));
+      },
+      update(){
+        if (!this.spike.activated && centerX() >= this.spike.triggerX) this.spike.activated = true;
+        if (this.spike.activated && this.spike.h < this.spike.maxH) this.spike.h += 8;
+        const mountainTop = floorTopY - this.height;
+        if (!this.spike.touched && this.spike.h >= mountainTop - room.y) {
+          this.spike.touched = true; this.moving = true;
+        }
+        if (this.moving && this.movedX < this.slideDistance) this.movedX += 4;
+      },
+      armIfStandingOn(){},
+      hitboxes(){ return this.spike.h > 0 ? [{x:this.spike.x,y:this.spike.y,w:this.spike.w,h:this.spike.h}] : []; },
+      surfaces(){
+        const surfs = [];
+        for (let i=0;i<24;i++){
+          const sx=this.baseX + this.movedX;
+          const x1=sx+i*(this.baseW/24);
+          const x2=sx+(i+1)*(this.baseW/24);
+          const mid=(x1+x2)/2;
+          const y=this.surfaceYAt(mid);
+          surfs.push({x:x1,y:y,w:x2-x1,h:10,ref:this});
+        }
+        return surfs;
+      },
+      holeRects(){ return this.moving ? [{x:this.baseX-10,y:floorTopY,w:this.movedX+10,h:holeDepth}] : []; },
+      draw(){
+        ctx.fillStyle='#4aa8b2';
+        const sx=this.baseX + this.movedX;
+        ctx.beginPath();
+        ctx.moveTo(sx, floorTopY);
+        ctx.lineTo(sx + this.baseW/2, floorTopY - this.height);
+        ctx.lineTo(sx + this.baseW, floorTopY);
+        ctx.closePath();
+        ctx.fill();
+        if (this.spike.h > 0) drawRepeatedSpikes(this.spike.x, this.spike.y, this.spike.w, this.spike.h, true);
+      }
+    };
+  }
+
+  function buildLevel(data) {
+    const lvl = {
+      name: data.name,
+      spawnX: pxFactor(data.spawnXFactor),
+      flagX: pxFactor(data.flagXFactor),
+      holes: (data.holes || []).map(h => ({x:pxFactor(h.xFactor), w:h.w})),
+      modules: []
+    };
+
+    (data.groundSpikeBands || []).forEach(cfg => lvl.modules.push(makeGroundSpikeBand(cfg)));
+    (data.roofSpikeBands || []).forEach(cfg => lvl.modules.push(makeRoofSpikeBand(cfg)));
+    (data.trapFloors || []).forEach(cfg => lvl.modules.push(makeFloorTrap(cfg)));
+    if (data.blocks) {
+      data.blocks.forEach((b, idx) => {
+        if (data.blockTrap && data.blockTrap.blockIndex === idx) lvl.modules.push(makeMovingBlockTrap(b, data.blockTrap));
+        else lvl.modules.push(makeBlock(b));
+      });
+    }
+    if (data.mountain && data.mountainSpike) lvl.modules.push(makeMountainModule(data.mountain, data.mountainSpike));
+
+    lvl.reset = () => lvl.modules.forEach(m => m.reset && m.reset());
+    lvl.baseSegments = () => {
+      const blockers = [];
+      lvl.holes.forEach(h => blockers.push({x:h.x, w:h.w}));
+      lvl.modules.forEach(m => { if (m.kind === 'floorTrap') blockers.push({x:m.homeX, w:m.homeW}); });
+      blockers.sort((a,b)=>a.x-b.x);
+      const pieces = [];
+      let cursor = room.x;
+      blockers.forEach(b => {
+        if (b.x > cursor) pieces.push({x:cursor,y:floorTopY,w:b.x-cursor,h:floorH});
+        cursor = Math.max(cursor, b.x + b.w);
+      });
+      const roomEnd = room.x + room.w;
+      if (cursor < roomEnd) pieces.push({x:cursor,y:floorTopY,w:roomEnd-cursor,h:floorH});
+      return pieces;
+    };
+    lvl.extraSurfaces = () => lvl.modules.flatMap(m => m.surfaces ? m.surfaces() : []);
+    lvl.extraHoleRects = () => lvl.modules.flatMap(m => m.holeRects ? m.holeRects() : []);
+    lvl.hitboxes = () => lvl.modules.flatMap(m => m.hitboxes ? m.hitboxes() : []);
+    lvl.armModules = () => lvl.modules.forEach(m => m.armIfStandingOn && m.armIfStandingOn());
+    lvl.updateModules = () => lvl.modules.forEach(m => m.update && m.update());
+    lvl.drawModules = () => lvl.modules.forEach(m => m.draw && m.draw());
+    return lvl;
+  }
+
+  let manifest = null, levelFiles = [], levelIndex = 0, level = null;
+  let levelComplete = false, levelTimer = 0;
+
+  function getAllSurfaces() {
+    return [
+      ...level.baseSegments().map(s => ({...s, kind:'base'})),
+      ...level.extraSurfaces().map(s => ({...s, kind:'module'}))
+    ];
+  }
+
+  function onGround() {
+    player.onSurface = null;
+    for (const seg of getAllSurfaces()) {
+      const horizontal = player.x + player.w > seg.x && player.x < seg.x + seg.w;
+      const onTop = Math.abs(feetY() - seg.y) <= 2;
+      if (horizontal && onTop) { player.onSurface = seg.ref || null; return true; }
+    }
+    return false;
+  }
+
+  function resolveCollision() {
+    if (player.vy < 0) return false;
+    const prevFeet = feetY() - player.vy;
+    const currFeet = feetY();
+    for (const s of getAllSurfaces()) {
+      const horizontal = player.x + player.w > s.x && player.x < s.x + s.w;
+      const crossed = prevFeet <= s.y && currFeet >= s.y;
+      if (horizontal && crossed) {
+        player.y = s.y - player.h;
+        player.vy = 0;
+        player.onSurface = s.ref || null;
+        return true;
+      }
+    }
+    player.onSurface = null;
+    return false;
+  }
+
+  function inAnyHole() {
+    const cx = centerX();
+    const allHoles = [...level.holes.map(h => ({x:h.x, y:floorTopY, w:h.w, h:holeDepth})), ...level.extraHoleRects()];
+    return allHoles.some(h => cx >= h.x && cx <= h.x + h.w);
+  }
+
+  function loadLevel(i) {
+    levelIndex = i;
+    level = buildLevel(levelFiles[i]);
+    level.reset();
+    resetPlayer(level.spawnX);
+    levelComplete = false;
+    levelTimer = 0;
+  }
+
+  function update() {
+    if (!level || !player) return;
+
+    // Restart should work in every state
+    if (keys.restart) {
+      loadLevel(levelIndex);
+      keys.restart = false;
+      return;
+    }
+
+    if (player.dead) {
+      player.y += player.vy;
+      player.deathTimer--;
+      if (player.deathTimer <= 0) loadLevel(levelIndex);
+      return;
+    }
+
+    if (levelComplete) {
+      levelTimer--;
+      if (levelTimer <= 0) {
+        if (levelIndex < levelFiles.length - 1) loadLevel(levelIndex + 1);
+        else levelComplete = false;
+      }
+      return;
+    }
+
+    if (keys.left && !keys.right) { player.vx = -4.2; player.flip = true; }
+    else if (keys.right && !keys.left) { player.vx = 4.2; player.flip = false; }
+    else player.vx = 0;
+
+    const grounded = onGround();
+    if (keys.jump && !player.jumpLock && grounded) {
+      player.vy = -13;
+      player.jumpLock = true;
+      player.onSurface = null;
+    }
+    if (!keys.jump) player.jumpLock = false;
+
+    level.armModules();
+    level.updateModules();
+
+    player.vy += 0.65;
+    if (player.vy > 16) player.vy = 16;
+
+    player.x += player.vx;
+    player.y += player.vy;
+    resolveCollision();
+
+    const flagRect = {x:level.flagX-18, y:floorBottomY-94, w:36, h:94};
+    if (rectsOverlap({x:player.x,y:player.y,w:player.w,h:player.h}, flagRect)) completeLevel();
+
+    if (inAnyHole() && feetY() > floorTopY + 8) killPlayer();
+    if (level.hitboxes().some(h => rectsOverlap({x:player.x,y:player.y,w:player.w,h:player.h}, h))) killPlayer();
+    if (player.y > H + 120) killPlayer();
+  }
+
+  function draw() {
+    if (!level || !player) return;
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#2f9ca3';
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = '#e6dfbf';
+    ctx.fillRect(room.x, room.y, room.w, room.h);
+
+    ctx.fillStyle = '#ffffff';
+    level.holes.forEach(h => ctx.fillRect(h.x, floorTopY, h.w, holeDepth));
+    level.extraHoleRects().forEach(h => ctx.fillRect(h.x, h.y || floorTopY, h.w, h.h || holeDepth));
+
+    ctx.fillStyle = '#4aa8b2';
+    level.baseSegments().forEach(s => ctx.fillRect(s.x, s.y, s.w, s.h));
+    level.drawModules();
+
+    if (flagImg.complete && flagImg.naturalWidth > 0) ctx.drawImage(flagImg, level.flagX - 18, floorBottomY - 94, 36, 94);
+
+    drawPlayer();
+
+    msg.textContent = `${level.name} | A/D or ←/→ move | Space/↑ jump | R restart`;
+    if (player.dead) msg.textContent = `${level.name} | Tu toh gaya bete. Restarting...`;
+    if (levelComplete) msg.textContent = levelIndex < levelFiles.length - 1 ? 'Level Complete! Next level...' : 'Congratulations! All current levels done.';
+  }
+
+  async function init() {
+    try {
+      const res = await fetch('levels/manifest.json');
+      if (!res.ok) throw new Error(`Cannot load levels/manifest.json (${res.status})`);
+      manifest = await res.json();
+
+      levelFiles = [];
+      for (const name of manifest.levels) {
+        const r = await fetch('levels/' + name);
+        if (!r.ok) throw new Error(`Cannot load levels/${name} (${r.status})`);
+        levelFiles.push(await r.json());
+      }
+
+      loadLevel(manifest.startLevel || 0);
+      requestAnimationFrame(loop);
+    } catch (e) {
+      showError(e);
+    }
+  }
+
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

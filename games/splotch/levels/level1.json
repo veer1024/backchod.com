@@ -1,0 +1,41 @@
+{
+  "name": "Level 1",
+  "spawnXFactor": 0.06,
+  "flagXFactor": 0.9,
+  "holes": [
+    {
+      "xFactor": 0.18,
+      "w": 74
+    },
+    {
+      "xFactor": 0.47,
+      "w": 74
+    }
+  ],
+  "trapFloors": [
+    {
+      "xFactor": 0.24,
+      "w": 170,
+      "delayFrames": 10,
+      "targetW": 84,
+      "targetXFactor": 0.31
+    }
+  ],
+  "groundSpikeBands": [
+    {
+      "xFactor": 0.63,
+      "w": 96,
+      "bandStartFactor": 0.58,
+      "bandEndFactor": 0.72
+    }
+  ],
+  "roofSpikeBands": [
+    {
+      "xFactor": 0.43,
+      "w": 48,
+      "maxH": 130,
+      "bandStartFactor": 0.39,
+      "bandEndFactor": 0.51
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Level 3",
+  "spawnXFactor": 0.06,
+  "flagXFactor": 0.92,
+  "holes": [],
+  "mountain": {
+    "baseXFactor": 0.43,
+    "baseW": 190,
+    "height": 110,
+    "slideDistance": 150
+  },
+  "mountainSpike": {
+    "xFactor": 0.52,
+    "w": 44,
+    "maxH": 125,
+    "triggerFactor": 0.5
+  }
+}
