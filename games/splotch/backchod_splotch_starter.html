@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Splotch Step 3 Hole Fall Logic</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #2f9ca3;
+    }
+    #game {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+
+  <script>
+    const config = {
+      type: Phaser.AUTO,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      parent: 'game',
+      backgroundColor: '#2f9ca3',
+      physics: {
+        default: 'arcade',
+        arcade: {
+          gravity: { y: 1200 },
+          debug: false
+        }
+      },
+      scene: { preload, create, update },
+      scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      }
+    };
+
+    let playerBody, playerSprite, cursors, keys;
+    let safeFloors = [];
+    let holeZones = [];
+    let deathText;
+    let isDead = false;
+    let sceneRef;
+
+    function preload() {
+      this.load.image('playerRaw', 'assets/images/player.png');
+      this.load.image('flag', 'assets/images/flag.png');
+    }
+
+    function create() {
+      sceneRef = this;
+
+      const src = this.textures.get('playerRaw').getSourceImage();
+      const trim = { x: 219, y: 80, w: 228, h: 397 };
+      const tex = this.textures.createCanvas('player', trim.w, trim.h);
+      const ctx = tex.context;
+      ctx.clearRect(0, 0, trim.w, trim.h);
+      ctx.drawImage(src, trim.x, trim.y, trim.w, trim.h, 0, 0, trim.w, trim.h);
+      tex.refresh();
+
+      const w = this.scale.width;
+      const h = this.scale.height;
+
+      const blockX = w * 0.09;
+      const blockY = h * 0.12;
+      const blockW = w * 0.65;
+      const blockH = h * 0.28;
+
+      const pillarW = Math.max(38, w * 0.03);
+      const pillarH = h * 0.40;
+      const pillarX = blockX + blockW * 0.48;
+      const pillarY = blockY + blockH;
+
+      const floorY = blockY + blockH;
+      const playerX = blockX + blockW * 0.11;
+
+      // Base visuals
+      this.add.rectangle(
+        blockX + blockW / 2,
+        blockY + blockH / 2,
+        blockW,
+        blockH,
+        0xe6dfbf
+      ).setOrigin(0.5);
+
+      this.add.rectangle(
+        pillarX + pillarW / 2,
+        pillarY + pillarH / 2,
+        pillarW,
+        pillarH,
+        0xe6dfbf
+      ).setOrigin(0.5);
+
+      // Floor model: safe strips + actual hole between them
+      // This is the key logic: ONLY safe strips have colliders.
+      const safeSegments = [
+        { x: blockX + blockW * 0.00, w: blockW * 0.48 }, // left safe floor
+        { x: blockX + blockW * 0.56, w: blockW * 0.44 }  // right safe floor
+      ];
+
+      const holeSegment = {
+        x: blockX + blockW * 0.48,
+        w: blockW * 0.08
+      };
+
+      // optional visible floor line so user sees where standing surface is
+      safeSegments.forEach(seg => {
+        this.add.rectangle(seg.x + seg.w / 2, floorY - 2, seg.w, 4, 0x4aa8b2).setOrigin(0.5);
+      });
+
+      // physics colliders only on safe strips
+      safeSegments.forEach(seg => {
+        const floor = this.physics.add.staticImage(seg.x + seg.w / 2, floorY + 4, null);
+        floor.displayWidth = seg.w;
+        floor.displayHeight = 8;
+        floor.refreshBody();
+        floor.visible = false;
+        safeFloors.push(floor);
+      });
+
+      // pillar top collider
+      const pillarTop = this.physics.add.staticImage(pillarX + pillarW / 2, pillarY + 4, null);
+      pillarTop.displayWidth = pillarW;
+      pillarTop.displayHeight = 8;
+      pillarTop.refreshBody();
+      pillarTop.visible = false;
+      safeFloors.push(pillarTop);
+
+      // hole zone used for forced fall detection
+      const hole = this.add.zone(holeSegment.x + holeSegment.w / 2, floorY + 18, holeSegment.w, 80);
+      this.physics.add.existing(hole, true);
+      holeZones.push(hole);
+
+      const bodyW = 18;
+      const bodyH = 24;
+      playerBody = this.add.rectangle(playerX, floorY - bodyH / 2, bodyW, bodyH, 0xffffff, 0);
+      this.physics.add.existing(playerBody);
+      playerBody.body.setSize(bodyW, bodyH);
+      playerBody.body.setOffset(0, 0);
+      playerBody.body.setCollideWorldBounds(true);
+
+      playerSprite = this.add.image(playerX, floorY, 'player');
+      playerSprite.setOrigin(0.5, 1);
+      playerSprite.setDisplaySize(30, 52);
+
+      const flagX = blockX + blockW * 0.87;
+      const flag = this.add.image(flagX, floorY, 'flag');
+      flag.setOrigin(0.5, 1);
+      flag.setDisplaySize(36, 94);
+
+      safeFloors.forEach(floor => this.physics.add.collider(playerBody, floor));
+
+      // if player body enters hole zone, kill support and let it fall
+      holeZones.forEach(holeZone => {
+        this.physics.add.overlap(playerBody, holeZone, () => {
+          if (isDead) return;
+
+          // Strong hole logic:
+          // if the player's feet are at floor level and center is over the hole,
+          // force downward state by ensuring no support behavior remains.
+          const body = playerBody.body;
+          const feetNearFloor = body.bottom >= floorY - 2;
+          const centerInHole = playerBody.x >= holeSegment.x && playerBody.x <= holeSegment.x + holeSegment.w;
+
+          if (feetNearFloor && centerInHole) {
+            body.setVelocityY(Math.max(body.velocity.y, 180));
+          }
+        });
+      });
+
+      cursors = this.input.keyboard.createCursorKeys();
+      keys = this.input.keyboard.addKeys({
+        A: Phaser.Input.Keyboard.KeyCodes.A,
+        D: Phaser.Input.Keyboard.KeyCodes.D,
+        W: Phaser.Input.Keyboard.KeyCodes.W,
+        R: Phaser.Input.Keyboard.KeyCodes.R
+      });
+
+      this.add.text(16, 16, 'A/D or ←/→ move, W/↑/Space jump, R restart', {
+        fontSize: '18px',
+        color: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.15)',
+        padding: { left: 8, right: 8, top: 6, bottom: 6 }
+      });
+
+      deathText = this.add.text(w / 2, 40, '', {
+        fontSize: '28px',
+        color: '#ff2f97',
+        stroke: '#000000',
+        strokeThickness: 4
+      }).setOrigin(0.5, 0);
+    }
+
+    function killPlayer(reason) {
+      if (isDead) return;
+      isDead = true;
+
+      deathText.setText(reason === 'HOLE' ? 'Hole mein gir gaya.' : 'Tu toh gaya bete.');
+
+      playerBody.body.enable = false;
+      sceneRef.tweens.add({
+        targets: playerSprite,
+        alpha: 0,
+        angle: 180,
+        scaleX: 0.4,
+        scaleY: 0.4,
+        duration: 350,
+        onComplete: () => {
+          sceneRef.time.delayedCall(400, () => {
+            sceneRef.scene.restart();
+            safeFloors = [];
+            holeZones = [];
+            isDead = false;
+          });
+        }
+      });
+    }
+
+    function update() {
+      if (!playerBody || !playerBody.body || isDead) return;
+      const body = playerBody.body;
+
+      const moveLeft = cursors.left.isDown || keys.A.isDown;
+      const moveRight = cursors.right.isDown || keys.D.isDown;
+
+      if (moveLeft) {
+        body.setVelocityX(-220);
+        playerSprite.setFlipX(true);
+      } else if (moveRight) {
+        body.setVelocityX(220);
+        playerSprite.setFlipX(false);
+      } else {
+        body.setVelocityX(0);
+      }
+
+      const jumpPressed =
+        Phaser.Input.Keyboard.JustDown(cursors.up) ||
+        Phaser.Input.Keyboard.JustDown(cursors.space) ||
+        Phaser.Input.Keyboard.JustDown(keys.W);
+
+      if (jumpPressed && (body.blocked.down || body.touching.down)) {
+        body.setVelocityY(-520);
+      }
+
+      if (Phaser.Input.Keyboard.JustDown(keys.R)) {
+        sceneRef.scene.restart();
+        safeFloors = [];
+        holeZones = [];
+        isDead = false;
+        return;
+      }
+
+      // sync visual sprite to physics body
+      playerSprite.x = playerBody.x;
+      playerSprite.y = playerBody.body.bottom + 1;
+
+      // strong hole death:
+      // if player center is over hole and body bottom passed below floor line enough, kill
+      const floorY = sceneRef.scale.height * 0.12 + sceneRef.scale.height * 0.28;
+      const blockX = sceneRef.scale.width * 0.09;
+      const blockW = sceneRef.scale.width * 0.65;
+      const holeX = blockX + blockW * 0.48;
+      const holeW = blockW * 0.08;
+
+      const centerInHole = playerBody.x >= holeX && playerBody.x <= holeX + holeW;
+      const droppedBelowFloor = body.top > floorY + 10;
+
+      if (centerInHole && droppedBelowFloor) {
+        killPlayer('HOLE');
+      }
+
+      if (body.y > sceneRef.scale.height + 80) {
+        killPlayer('HOLE');
+      }
+    }
+
+    new Phaser.Game(config);
+  </script>
+</body>
+</html>
