@@ -26,6 +26,14 @@
     "targetW": 52,
     "slideDx": 120
   },
+  "groundSpikeBands": [
+    {
+      "xFactor": 0.60,
+      "w": 30,
+      "bandStartFactor": 0.58,
+      "bandEndFactor": 0.70
+    }
+  ],
   "roofSpikeBands": [
     {
       "xFactor": 0.22,

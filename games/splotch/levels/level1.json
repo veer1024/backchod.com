@@ -10,6 +10,10 @@
     {
       "xFactor": 0.47,
       "w": 74
+    },
+    {
+      "xFactor": 0.66,
+      "w": 74
     }
   ],
   "trapFloors": [
@@ -23,17 +27,24 @@
   ],
   "groundSpikeBands": [
     {
-      "xFactor": 0.63,
+      "xFactor": 0.80,
       "w": 96,
-      "bandStartFactor": 0.58,
-      "bandEndFactor": 0.72
+      "bandStartFactor": 0.78,
+      "bandEndFactor": 0.89
     }
   ],
   "roofSpikeBands": [
     {
+      "xFactor": 0.23,
+      "w": 48,
+      "maxH": 100,
+      "bandStartFactor": 0.21,
+      "bandEndFactor": 0.40
+    },
+    {
       "xFactor": 0.43,
       "w": 48,
-      "maxH": 130,
+      "maxH": 100,
       "bandStartFactor": 0.39,
       "bandEndFactor": 0.51
     }
